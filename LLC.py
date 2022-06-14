@@ -40,7 +40,7 @@ def formula_LLC(l_amount,total_craft,exhens,standards,shens):
 
     print("Expected legendaries: " + str(expected_drop_l + expected_craft_l))
     print("Your legendaries: " + str(l_amount))
-    return l_amount - expected_drop_l - expected_craft_l
+    return (l_amount - expected_drop_l - expected_craft_l)
 
 #The methods below were used to get all the drop from all ships and check if there were a legendary,
 #removed due to too many calls to the server
