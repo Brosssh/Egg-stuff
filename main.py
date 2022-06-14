@@ -5,16 +5,21 @@ from server_manager import server
 
 #EID=lines[0]
 
-EID=str(input("Please enter your EID (it won't be steal/saved anywhere): "))
-
-server_manager=server()
-server_manager.set_EID(EID)
-
-result=server_manager.execute_call()
-
-#print(server_manager.get_loot("agxhdXhicmFpbmhvbWVyFgsSCUVJTWlzc2lvbhiAgJCB1rm6Cww"))
-
-#print(get_array_ships_ID(result))
+checksum=0
+#USER_NOT_FOUND=2
+while checksum==0:
+    try:
+        EID = str(input("Please enter your EID (it won't be steal/saved anywhere): "))
+        server_manager = server()
+        server_manager.set_EID(EID)
+        result = server_manager.execute_call()
+        checksum=result.backup.checksum
+        if checksum==0:
+            print("EID not registered on Egg Inc server\n")
+        else:
+            break
+    except:
+        print("Insert valid EID (EI12345678)\n")
 
 print("Total legendaries: "+str(get_leg_number_total(result)))
 
