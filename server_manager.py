@@ -14,7 +14,7 @@ class server:
         first_contact_request.ei_user_id = self.EID
         first_contact_request.client_version = 36
 
-        url = 'https://wasmegg.zw.workers.dev/?url=https://www.auxbrain.com/ei/bot_first_contact'
+        url = 'https://www.auxbrain.com/ei/bot_first_contact'
         data = { 'data' : base64.b64encode(first_contact_request.SerializeToString()).decode('utf-8') }
 
         try:
@@ -31,7 +31,7 @@ class server:
         loot_request=ei_pb2.MissionRequest()
         loot_request.info.identifier=ship_ID
         loot_request.ei_user_id=self.EID
-        url = 'https://wasmegg.zw.workers.dev/?url=https://www.auxbrain.com/ei_afx/complete_mission'
+        url = 'https://www.auxbrain.com/ei_afx/complete_mission'
         data = {'data': base64.b64encode(loot_request.SerializeToString()).decode('utf-8')}
 
         try:
