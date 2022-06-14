@@ -1,9 +1,11 @@
 from LLC import *
 from server_manager import server
 
-lines = open("C:/eid.txt", "r").read().split('\n')
+#lines = open("C:/eid.txt", "r").read().split('\n')
 
-EID=lines[0]
+#EID=lines[0]
+
+EID=str(input("Please enter your EID (it won't be steal/saved anywhere): "))
 
 server_manager=server()
 server_manager.set_EID(EID)
