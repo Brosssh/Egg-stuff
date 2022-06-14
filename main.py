@@ -2,11 +2,10 @@ from LLC import *
 from server_manager import server
 
 #lines = open("C:/eid.txt", "r").read().split('\n')
-
-#EID=lines[0]
+#EID=lines[1]
 
 checksum=0
-#USER_NOT_FOUND=2
+
 while checksum==0:
     try:
         EID = str(input("Please enter your EID (it won't be steal/saved anywhere): "))
@@ -21,7 +20,8 @@ while checksum==0:
     except:
         print("Insert valid EID (EI12345678)\n")
 
-print("Total legendaries: "+str(get_leg_number_total(result)))
+#print("Total legendaries: "+str(get_leg_number_total(result)))
+print("Hello "+result.backup.user_name+" glad to see you here")
 
 print("\nTotal drops from exthens: "+ str(get_total_drop_exthens(result)))
 
