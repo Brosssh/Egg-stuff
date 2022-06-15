@@ -1,4 +1,4 @@
-from LLC import *
+from LLC.LLC_functions import *
 from server_manager import server
 
 #lines = open("C:/eid.txt", "r").read().split('\n')
