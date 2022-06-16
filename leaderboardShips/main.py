@@ -2,6 +2,7 @@ from leaderboardShips.ships_functions import *
 from server_manager import server
 from mongoDB import mongo_manager
 from utiliy import encrypt_string
+import os
 
 checksum=0
 
@@ -37,10 +38,14 @@ with open('D:\\ship_json.txt') as loot_json:
 
 final_dict={"EID":"test_eid","name":"Q","loots":loots}
 
-'''
+
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
 user=lines[0]
 pssw=lines[1]
+'''
+
+user=os.getenv("user")
+pssw=os.getenv("pssw")
 
 mongo_manager=mongo_manager(user,pssw)
 print("Connection with the database established")
