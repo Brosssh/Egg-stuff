@@ -1,7 +1,8 @@
 from leaderboardShips.ships_functions import *
 from server_manager import server
 from mongoDB import mongo_manager
-''''
+from utiliy import encrypt_string
+
 checksum=0
 
 while checksum==0:
@@ -24,8 +25,10 @@ user_name=result.backup.user_name
 
 dict_loots=semplify_dict(loot_dict)
 
-#TODO EID encrypt
-final_dict={"EID":EID,"name":user_name,"loots":dict_loots}
+encryptedEID = encrypt_string(EID)
+
+final_dict={"EID":encryptedEID,"name":user_name,"loots":dict_loots}
+
 '''
 
 with open('D:\\ship_json.txt') as loot_json:
@@ -33,6 +36,7 @@ with open('D:\\ship_json.txt') as loot_json:
     loots=semplify_dict(loot_dict)
 
 final_dict={"EID":"test_eid","name":"Q","loots":loots}
+'''
 
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
 user=lines[0]
