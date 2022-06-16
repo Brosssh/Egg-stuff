@@ -29,7 +29,6 @@ class server:
 
 
     def get_loot(self,ship_ID):
-        time.sleep(1)
         loot_request=ei_pb2.MissionRequest()
         loot_request.info.identifier=ship_ID
         loot_request.ei_user_id=self.EID

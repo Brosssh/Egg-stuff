@@ -30,6 +30,8 @@ encryptedEID = encrypt_string(EID)
 
 final_dict={"EID":encryptedEID,"name":user_name,"loots":dict_loots}
 
+conn=os.getenv("mongo_conn")
+
 '''
 
 with open('D:\\ship_json.txt') as loot_json:
@@ -42,12 +44,12 @@ final_dict={"EID":"test_eid","name":"Q","loots":loots}
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
 user=lines[0]
 pssw=lines[1]
+
+conn="mongodb+srv://"+user+":"+pssw+"@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
 '''
 
-user=os.getenv("user")
-pssw=os.getenv("pssw")
 
-mongo_manager=mongo_manager(user,pssw)
+mongo_manager=mongo_manager(conn)
 print("Connection with the database established")
 mongo_manager.insert_full_user_ships(final_dict)
 print("Data successfully loaded!")

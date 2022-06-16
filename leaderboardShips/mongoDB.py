@@ -3,15 +3,15 @@ from pymongo import MongoClient
 
 class mongo_manager:
 
-    conn_string="unset"
     client=None
 
-    def __init__(self,user,pssw):
+    def __init__(self,conn_string):
         try:
-            self.conn_string="mongodb+srv://"+user+":"+pssw+"@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
-            self.client = MongoClient(self.conn_string)
+            self.client = MongoClient(conn_string)
         except:
-            print("Something went wrong with the database connnection")
+            print("Something went wrong with the database connection")
+
+
 
     def __get_collection__(self):
         try:
@@ -19,10 +19,11 @@ class mongo_manager:
             mycol = mydb["users_ship"]
             return mycol
         except:
-            print("Something went wrong with the database connnection")
+            print("Something went wrong with the database connection")
+
 
     def insert_full_user_ships(self,dict_to_insert):
         try:
             self.__get_collection__().insert_one(dict_to_insert)
-        except:
-            print("Something went wrong with the database connnection")
+        except Exception as e:
+            print(e)
