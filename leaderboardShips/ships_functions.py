@@ -9,6 +9,8 @@ def __get_array_ships_ID__(res): #get all exthens IDs
 
 def loots(res,server_manager):
     file_loot=[]
+    print("Please wait, DO NOT CLOSE THIS PAGE, maybe you can actually but please wait till the end and don't press STOP :)\n")
+    print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n\n")
     for el in tqdm(__get_array_ships_ID__(res)):
         ship_raw = server_manager.get_loot(el)
         ship_dict=(MessageToDict(ship_raw.info))

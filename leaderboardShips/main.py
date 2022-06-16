@@ -7,7 +7,7 @@ checksum=0
 
 while checksum==0:
     try:
-        EID = str(input("Please enter your EID (it won't be steal/saved anywhere): "))
+        EID = str(input("Please enter your EID (only your in-game name (and ship loots) will be stored, the EID will be encrypted, so unreadable to me): "))
         server_manager = server()
         server_manager.set_EID(EID)
         result = server_manager.execute_call()
@@ -36,12 +36,14 @@ with open('D:\\ship_json.txt') as loot_json:
     loots=semplify_dict(loot_dict)
 
 final_dict={"EID":"test_eid","name":"Q","loots":loots}
-'''
 
+'''
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
 user=lines[0]
 pssw=lines[1]
 
 mongo_manager=mongo_manager(user,pssw)
+print("Connection with the database established")
 mongo_manager.insert_full_user_ships(final_dict)
+print("Data successfully loaded!")
 
