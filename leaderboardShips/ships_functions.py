@@ -1,6 +1,7 @@
 import json
 from tqdm import tqdm
 from google.protobuf.json_format import MessageToJson, MessageToDict
+import copy
 
 
 def __get_array_ships_ID__(res): #get all exthens IDs
@@ -67,3 +68,78 @@ def semplify_dict(file_dict):
         semplified_drops=semplify_drop_list(drops)
         new_dict[identifier]={"stars":stars,"drops":semplified_drops}
     return new_dict
+
+
+#this code below is shit, need to be fixed
+def check_and_update_file(old_leaderboard_l_dict,array_new_gold):
+    new_leaderboard_l_dict=old_leaderboard_l_dict
+    array_new_gold=sorted(array_new_gold, key=lambda item: item.get("total"))
+    for el in array_new_gold[-3:]:
+        #par
+        if new_leaderboard_l_dict["1"]["count"][0]["total"]==el["total"]:
+            new_leaderboard_l_dict["1"]["info"]["name"].append(el["info"]["name"])
+            new_leaderboard_l_dict["1"]["info"]["stars"].append(el["info"]["stars"])
+        elif new_leaderboard_l_dict["2"]["count"][0]["total"]==el["total"]:
+            new_leaderboard_l_dict["2"]["count"].append(el["total"])
+            new_leaderboard_l_dict["2"]["info"]["name"].append(el["info"]["name"])
+            new_leaderboard_l_dict["2"]["info"]["stars"].append(el["info"]["stars"])
+        elif new_leaderboard_l_dict["3"]["count"][0]["total"]==el["total"]:
+            new_leaderboard_l_dict["3"]["info"]["name"].append(el["info"]["name"])
+            new_leaderboard_l_dict["3"]["info"]["stars"].append(el["info"]["stars"])
+
+        elif el["total"]>new_leaderboard_l_dict["1"]["count"][0]["total"]:
+
+            #if the 1 is new, old 1 become 2 and old 2 second 3
+            new_leaderboard_l_dict["3"] = copy.deepcopy(new_leaderboard_l_dict["2"])
+            new_leaderboard_l_dict["2"] = copy.deepcopy(new_leaderboard_l_dict["1"])
+
+            new_leaderboard_l_dict["1"]["count"].clear()
+            new_leaderboard_l_dict["1"]["count"].append(el)
+            new_leaderboard_l_dict["1"]["info"].clear()
+            new_leaderboard_l_dict["1"]["info"]=el["info"]
+
+        elif el["total"]>new_leaderboard_l_dict["2"]["count"][0]["total"]:
+
+            new_leaderboard_l_dict["3"] = copy.deepcopy(new_leaderboard_l_dict["2"])
+
+            new_leaderboard_l_dict["2"]["count"].clear()
+            new_leaderboard_l_dict["2"]["count"].append(el)
+            new_leaderboard_l_dict["2"]["info"].clear()
+            new_leaderboard_l_dict["2"]["info"]=el["info"]
+
+        elif el["total"]>new_leaderboard_l_dict["3"]["count"][0]["total"]:
+
+            new_leaderboard_l_dict["3"]["count"].clear()
+            new_leaderboard_l_dict["3"]["count"].append(el)
+            new_leaderboard_l_dict["3"]["info"].clear()
+            new_leaderboard_l_dict["3"]["info"]=el["info"]
+    return new_leaderboard_l_dict
+
+def gold(old_leaderboard_l_dict,encryptedEID,mongo):
+    result_query = dict(mongo.get_full_from_eid(encryptedEID))
+    array_gold_new=[]
+    for el in dict(result_query["loots"]):
+        gold_dict = dict({"1": 0, "2": 0, "3": 0, "total": 0,"info":{"stars":[0],"name":[""]}})
+        for singol_drop in result_query["loots"][el]["drops"]:
+            if singol_drop=="GOLD_METEORITE":
+                gold_dict["info"]["stars"] = [result_query["loots"][el]["stars"]]
+                gold_dict["info"]["name"] = [result_query["name"]]
+                #TODO capacity
+                for number in result_query["loots"][el]["drops"]["GOLD_METEORITE"]:
+                    if number=="1":
+                        gold_dict["1"]+=result_query["loots"][el]["drops"]["GOLD_METEORITE"]["1"]["COMMON"]["count"]
+                    elif number=="2":
+                        gold_dict["2"]+=result_query["loots"][el]["drops"]["GOLD_METEORITE"]["2"]["COMMON"]["count"]
+                    elif number == "3":
+                        gold_dict["3"] += result_query["loots"][el]["drops"]["GOLD_METEORITE"]["3"]["COMMON"]["count"]
+        gold_dict["total"]=gold_dict["1"]+(gold_dict["2"]*9)+(gold_dict["3"]*9*11)
+        array_gold_new.append(gold_dict)
+
+    return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
+
+
+#TODO capacity to check if 2x
+def update_leaderboard(old_leaderboard_dict,encryptedEID,mongo):
+    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],encryptedEID,mongo))
+    return old_leaderboard_dict
+

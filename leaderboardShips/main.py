@@ -3,7 +3,7 @@ from server_manager import server
 from mongoDB import mongo_manager
 from utiliy import encrypt_string
 import os
-
+'''
 checksum=0
 
 while checksum==0:
@@ -30,7 +30,7 @@ encryptedEID = encrypt_string(EID)
 
 final_dict={"EID":encryptedEID,"name":user_name,"loots":dict_loots}
 
-conn=os.getenv("mongo_conn")
+#conn=os.getenv("mongo_conn")
 
 '''
 
@@ -38,7 +38,8 @@ with open('D:\\ship_json.txt') as loot_json:
     loot_dict = json.load(loot_json)
     loots=semplify_dict(loot_dict)
 
-final_dict={"EID":"test_eid","name":"Q","loots":loots}
+encryptedEID = encrypt_string("test_eid")
+final_dict={"EID":encryptedEID,"name":"Q","loots":loots}
 
 
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
@@ -46,11 +47,16 @@ user=lines[0]
 pssw=lines[1]
 
 conn="mongodb+srv://"+user+":"+pssw+"@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
-'''
 
 
-mongo_manager=mongo_manager(conn)
+
+mongo=mongo_manager(conn)
 print("Connection with the database established")
-mongo_manager.insert_full_user_ships(final_dict)
+#mongo.insert_full_user_ships(final_dict)
 print("Data successfully loaded!")
 
+with open('leaderboard.json') as old_leaderboard:
+    leaderboard_dict = json.load(old_leaderboard)
+
+leaderboard_updated=update_leaderboard(leaderboard_dict,encryptedEID,mongo)
+#TODO caricamento file su mongo, aggiornamento file 

@@ -27,3 +27,9 @@ class mongo_manager:
             self.__get_collection__().insert_one(dict_to_insert)
         except Exception as e:
             print(e)
+
+    def get_full_from_eid(self,eid):
+        try:
+            return self.__get_collection__().find_one({'EID':eid})
+        except Exception as e:
+            print(e)
