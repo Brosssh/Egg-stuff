@@ -21,21 +21,40 @@ def loots(res,server_manager):
         file_loot.append(ship_dict)
     return file_loot
 
+def __level_to_tier__(name, level_string):
+    if "STONE" in name:
+        if "FRAGMENT" in name:
+            return 1
+        elif level_string=="INFERIOR":
+            return 2
+        elif level_string == "LESSER":
+            return 3
+        elif level_string=="NORMAL":
+            return 4
+    else:
+        return 1 if level_string=="INFERIOR" else 2 if level_string=="LESSER" \
+            else 3 if level_string=="NORMAL" else 4 if level_string=="GREATER" else 0
+
 def semplify_drop_list(list_drop):
-    name_list=[]
-    drops=[]
+    drops={}
     for el in list_drop:
         name=el["spec"]["name"]
         level=el["spec"]["level"]
         rarity=el["spec"]["rarity"]
-        if name not in name_list:
-            name_list.append(name)
-            drops.append({"name":name,"rarity":rarity,""})
+        tier=str(__level_to_tier__(name,level))
+        if name not in drops.keys():
+            drops[name]={tier: {rarity:{"count":1}}}
+        elif tier not in drops[name].keys():
+            drops[name][tier] = {rarity:{"count":1}}
+        elif rarity not in drops[name][tier].keys():
+            drops[name][tier][rarity] = {"count":1}
+        else:
+            drops[name][tier][rarity]["count"]+=1
+    return drops
 
 def semplify_dict(file_dict):
-    new_json=""
+    new_dict={}
     for el in file_dict:
-        seconds_remaining=el["secondsRemaining"]
         identifier=el["identifier"]
         stars=0
         try:
@@ -43,5 +62,6 @@ def semplify_dict(file_dict):
         except:
             pass
         drops=el["drop_List"]
-        semplify_drop_list(drops)
-    return seconds_remaining
+        semplified_drops=semplify_drop_list(drops)
+        new_dict[identifier]={"stars":stars,"drops":semplified_drops}
+    return new_dict
