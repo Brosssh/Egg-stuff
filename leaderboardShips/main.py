@@ -1,6 +1,6 @@
 from leaderboardShips.ships_functions import *
 from server_manager import server
-
+from mongoDB import mongo_manager
 ''''
 checksum=0
 
@@ -18,8 +18,26 @@ while checksum==0:
     except:
         print("Insert valid EID (EI12345678)\n")
 
-loot=loots(result,server_manager)
+loot_dict=loots(result,server_manager)
+
+user_name=result.backup.user_name
+
+dict_loots=semplify_dict(loot_dict)
+
+#TODO EID encrypt
+final_dict={"EID":EID,"name":user_name,"loots":dict_loots}
 '''
+
 with open('C:\\Users\\tiabr\\Desktop\\ship_json.txt') as loot_json:
     loot_dict = json.load(loot_json)
-    semplify_dict(loot_dict)
+    loots=semplify_dict(loot_dict)
+
+final_dict={"EID":"test_eid","name":"Q","loots":loots}
+
+lines = open("D:/mongo_cred.txt", "r").read().split('\n')
+user=lines[0]
+pssw=lines[1]
+
+mongo_manager=mongo_manager(user,pssw)
+mongo_manager.insert_full_user_ships(final_dict)
+
