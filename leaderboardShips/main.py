@@ -28,7 +28,7 @@ dict_loots=semplify_dict(loot_dict)
 final_dict={"EID":EID,"name":user_name,"loots":dict_loots}
 '''
 
-with open('C:\\Users\\tiabr\\Desktop\\ship_json.txt') as loot_json:
+with open('D:\\ship_json.txt') as loot_json:
     loot_dict = json.load(loot_json)
     loots=semplify_dict(loot_dict)
 
