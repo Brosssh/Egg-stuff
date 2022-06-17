@@ -3,7 +3,7 @@ from server_manager import server
 from mongoDB import mongo_manager
 from utiliy import encrypt_string
 import os
-'''
+
 checksum=0
 
 while checksum==0:
@@ -28,7 +28,7 @@ dict_loots=semplify_dict(loot_dict)
 
 encryptedEID = encrypt_string(EID)
 
-final_dict={"EID":encryptedEID,"name":user_name,"loots":dict_loots}
+final_dict={"EID":encryptedEID,"name":user_name,"ships":dict_loots}
 
 #conn=os.getenv("mongo_conn")
 
@@ -41,7 +41,7 @@ with open('D:\\ship_json.txt') as loot_json:
 encryptedEID = encrypt_string("test_eid")
 final_dict={"EID":encryptedEID,"name":"Q","loots":loots}
 
-
+'''
 lines = open("D:/mongo_cred.txt", "r").read().split('\n')
 user=lines[0]
 pssw=lines[1]
@@ -51,12 +51,22 @@ conn="mongodb+srv://"+user+":"+pssw+"@eggcluster.sbrsi.mongodb.net/?retryWrites=
 
 
 mongo=mongo_manager(conn)
-print("Connection with the database established")
-#mongo.insert_full_user_ships(final_dict)
-print("Data successfully loaded!")
+if not mongo.user_exists(encryptedEID):
+    mongo.insert_full_user_ships(final_dict)
+    print("Data successfully loaded!")
+else:
+    mongo.update_user_ships(final_dict,encryptedEID)
+    print("Data successfully updated!")
 
+
+gold_query_result=mongo.get_drop_by_name("GOLD_METEORITE")
+#for el in gold_query_result:
+
+
+'''
 with open('leaderboard.json') as old_leaderboard:
     leaderboard_dict = json.load(old_leaderboard)
 
 leaderboard_updated=update_leaderboard(leaderboard_dict,encryptedEID,mongo)
-#TODO caricamento file su mongo, aggiornamento file 
+#TODO caricamento file su mongo, aggiornamento file
+'''

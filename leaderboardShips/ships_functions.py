@@ -10,6 +10,8 @@ def __get_array_ships_ID__(res): #get all exthens IDs
 
 def loots(res,server_manager):
     file_loot=[]
+    #temp
+    c=0
     print("Please wait, DO NOT CLOSE THIS PAGE, maybe you can actually but please wait till the end and don't press STOP :)\n")
     print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n\n")
     for el in tqdm(__get_array_ships_ID__(res)):
@@ -22,6 +24,15 @@ def loots(res,server_manager):
             drops.append(dict_temp)
         ship_dict["drop_List"]=drops
         file_loot.append(ship_dict)
+        c+=1
+        #temp
+        if c>=4:
+            break
+        # temp
+        # temp
+
+
+
     return file_loot
 
 def __level_to_tier__(name, level_string):
@@ -59,6 +70,7 @@ def semplify_dict(file_dict):
     new_dict={}
     for el in file_dict:
         identifier=el["identifier"]
+        capacity = el["capacity"]
         stars=0
         try:
             stars=el["level"]
@@ -66,7 +78,7 @@ def semplify_dict(file_dict):
             pass
         drops=el["drop_List"]
         semplified_drops=semplify_drop_list(drops)
-        new_dict[identifier]={"stars":stars,"drops":semplified_drops}
+        new_dict.append({"identifier":identifier,"stars":stars,"capacity":capacity, "drops":semplified_drops})
     return new_dict
 
 
