@@ -48,25 +48,23 @@ pssw=lines[1]
 
 conn="mongodb+srv://"+user+":"+pssw+"@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
 
-
+#ships that weren't on the db before this execution, will be modified below
+new_ships=final_dict
 
 mongo=mongo_manager(conn)
 if not mongo.user_exists(encryptedEID):
-    mongo.insert_full_user_ships(final_dict)
+    #mongo.insert_full_user_ships(final_dict)
     print("Data successfully loaded!")
 else:
-    mongo.update_user_ships(final_dict,encryptedEID)
+    #new_ships=mongo.update_and_return_user_ships(final_dict,encryptedEID)
     print("Data successfully updated!")
 
 
-gold_query_result=mongo.get_drop_by_name("GOLD_METEORITE")
-#for el in gold_query_result:
 
 
-'''
 with open('leaderboard.json') as old_leaderboard:
     leaderboard_dict = json.load(old_leaderboard)
 
-leaderboard_updated=update_leaderboard(leaderboard_dict,encryptedEID,mongo)
-#TODO caricamento file su mongo, aggiornamento file
-'''
+leaderboard_updated=update_leaderboard(leaderboard_dict,new_ships)
+print(leaderboard_updated)
+#TODO caricamento file su mongo

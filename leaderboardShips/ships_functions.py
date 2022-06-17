@@ -67,7 +67,7 @@ def semplify_drop_list(list_drop):
     return drops
 
 def semplify_dict(file_dict):
-    new_dict={}
+    new_dict=[]
     for el in file_dict:
         identifier=el["identifier"]
         capacity = el["capacity"]
@@ -127,31 +127,25 @@ def check_and_update_file(old_leaderboard_l_dict,array_new_gold):
             new_leaderboard_l_dict["3"]["info"]=el["info"]
     return new_leaderboard_l_dict
 
-def gold(old_leaderboard_l_dict,encryptedEID,mongo):
-    result_query = dict(mongo.get_full_from_eid(encryptedEID))
+def gold(old_leaderboard_l_dict,new_ships):
     array_gold_new=[]
-    for el in dict(result_query["loots"]):
-        gold_dict = dict({"1": 0, "2": 0, "3": 0, "total": 0,"info":{"stars":[0],"name":[""]}})
-        for singol_drop in result_query["loots"][el]["drops"]:
+    user=new_ships["name"]
+    for el in new_ships["ships"]:
+        gold_dict = dict({"1": 0, "2": 0, "3": 0, "total": 0,"info":{"stars":[0],"name":[""],"capacity": [0]}})
+        for singol_drop in el["drops"]:
             if singol_drop=="GOLD_METEORITE":
-                gold_dict["info"]["stars"] = [result_query["loots"][el]["stars"]]
-                gold_dict["info"]["name"] = [result_query["name"]]
-                #TODO capacity
-                for number in result_query["loots"][el]["drops"]["GOLD_METEORITE"]:
-                    if number=="1":
-                        gold_dict["1"]+=result_query["loots"][el]["drops"]["GOLD_METEORITE"]["1"]["COMMON"]["count"]
-                    elif number=="2":
-                        gold_dict["2"]+=result_query["loots"][el]["drops"]["GOLD_METEORITE"]["2"]["COMMON"]["count"]
-                    elif number == "3":
-                        gold_dict["3"] += result_query["loots"][el]["drops"]["GOLD_METEORITE"]["3"]["COMMON"]["count"]
+                gold_dict["info"]["stars"] = [el["stars"]]
+                gold_dict["info"]["name"] = [user]
+                gold_dict["info"]["capacity"] = [el["capacity"]]
+                for number in el["drops"]["GOLD_METEORITE"]:
+                    gold_dict[number]+=el["drops"]["GOLD_METEORITE"][number]["COMMON"]["count"]
         gold_dict["total"]=gold_dict["1"]+(gold_dict["2"]*9)+(gold_dict["3"]*9*11)
         array_gold_new.append(gold_dict)
 
     return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
 
 
-#TODO capacity to check if 2x
-def update_leaderboard(old_leaderboard_dict,encryptedEID,mongo):
-    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],encryptedEID,mongo))
+def update_leaderboard(old_leaderboard_dict,new_ships):
+    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships))
     return old_leaderboard_dict
 

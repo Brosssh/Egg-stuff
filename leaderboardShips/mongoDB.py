@@ -49,7 +49,7 @@ class mongo_manager:
         except Exception as e:
             print(e)
 
-    def update_user_ships(self, final_dict, encryptedEID):
+    def update_and_return_user_ships(self, final_dict, encryptedEID):
         ships=self.__get_collection__().find({"EID":encryptedEID},{"ships":1})
         list_already_stored=[]
         for el in ships:
@@ -68,6 +68,8 @@ class mongo_manager:
                 doc["ships"].append(el)
             self.__get_collection__().delete_one({"EID":encryptedEID})
             self.__get_collection__().insert_one(doc)
+            return doc
         else:
             print("No new ships")
+
 
