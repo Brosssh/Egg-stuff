@@ -57,14 +57,14 @@ if not mongo.user_exists(encryptedEID):
     print("Data successfully loaded!")
 else:
     new_ships=mongo.update_and_return_user_ships(final_dict,encryptedEID)
-    print("Data successfully updated!")
+    if new_ships is not None:
+        print("Data successfully updated!")
+    else:
+        print("No new ships")
 
+if new_ships is not None:
+    leaderboard_dict = mongo.get_leaderboard()
 
-
-
-with open('leaderboard.json') as old_leaderboard:
-    leaderboard_dict = json.load(old_leaderboard)
-
-leaderboard_updated=update_leaderboard(leaderboard_dict,new_ships)
-print(leaderboard_updated)
-#TODO caricamento file su mongo
+    leaderboard_updated=update_leaderboard(leaderboard_dict,new_ships,3)
+    mongo.load_updated_leaderboard(leaderboard_updated)
+    print(leaderboard_updated)

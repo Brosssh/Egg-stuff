@@ -11,7 +11,13 @@ class mongo_manager:
         except:
             print("Something went wrong with the database connection")
 
-
+    def __get_leaderboard_coll__(self):
+        try:
+            mydb = self.client["db_leaderboard"]
+            mycol = mydb["leaderboard"]
+            return mycol
+        except:
+            print("Something went wrong with the database connection")
 
     def __get_collection__(self):
         try:
@@ -64,12 +70,31 @@ class mongo_manager:
             print("Inserting "+str(len(to_append))+" new ships to the database")
             #get old doc
             doc=self.get_full_from_eid(encryptedEID)
+            #contains a dict of only the new ships
+            to_return=doc.copy()
+            to_return["ships"]=to_return["ships"].clear()
+            to_return["ships"]=[]
             for el in to_append:
                 doc["ships"].append(el)
+                to_return["ships"].append(el)
             self.__get_collection__().delete_one({"EID":encryptedEID})
             self.__get_collection__().insert_one(doc)
-            return doc
+            return to_return
         else:
-            print("No new ships")
+            return None
+
+    def get_leaderboard(self):
+        try:
+            return self.__get_leaderboard_coll__().find_one()
+        except Exception as e:
+            print(e)
+
+    def load_updated_leaderboard(self, leaderboard_updated):
+        try:
+            self.__get_leaderboard_coll__().delete_one({})
+            self.__get_leaderboard_coll__().insert_one(leaderboard_updated)
+            print("Leaderboard updated")
+        except Exception as e:
+            print(e)
 
 

@@ -26,8 +26,8 @@ def loots(res,server_manager):
         file_loot.append(ship_dict)
         c+=1
         #temp
-        #if c>=4:
-            #break
+      #  if c>=3:
+#            break
         # temp
         # temp
 
@@ -81,71 +81,59 @@ def semplify_dict(file_dict):
         new_dict.append({"identifier":identifier,"stars":stars,"capacity":capacity, "drops":semplified_drops})
     return new_dict
 
+def check_if_same_total(leaderboard,current_el,n_pos):
+    for pos in [str(el) for el in range(1,n_pos+1)]:
+        if leaderboard[pos]["count"][0]["total"] == current_el["count"]["total"]:
+            for sub_el in current_el:
+                leaderboard[pos][sub_el].append(current_el[sub_el])
+    return leaderboard
+
+
+def move_all_down(start,stop,current_el,leaderboard):
+    for i in range(int(stop),int(start),-1):
+        leaderboard[str(i)]=copy.deepcopy(leaderboard[str(i-1)])
+    for sub_el in current_el:
+        leaderboard[start][sub_el].clear()
+        leaderboard[start][sub_el].append(copy.deepcopy(current_el[sub_el]))
+    return leaderboard
+
+
+def check_if_beetween_total(leaderboard,current_el,n_pos):
+    for pos in [str(el) for el in range(1, n_pos + 1)]:
+        if current_el["count"]["total"]>leaderboard[pos]["count"][0]["total"]:
+            move_all_down(pos,n_pos,current_el,leaderboard)
+        return leaderboard
+
 
 #this code below is shit, need to be fixed
-def check_and_update_file(old_leaderboard_l_dict,array_new_gold):
-    new_leaderboard_l_dict=old_leaderboard_l_dict
-    array_new_gold=sorted(array_new_gold, key=lambda item: item.get("total"))
-    for el in array_new_gold[-3:]:
-        #par
-        if new_leaderboard_l_dict["1"]["count"][0]["total"]==el["total"]:
-            new_leaderboard_l_dict["1"]["info"]["name"].append(el["info"]["name"])
-            new_leaderboard_l_dict["1"]["info"]["stars"].append(el["info"]["stars"])
-        elif new_leaderboard_l_dict["2"]["count"][0]["total"]==el["total"]:
-            new_leaderboard_l_dict["2"]["count"].append(el["total"])
-            new_leaderboard_l_dict["2"]["info"]["name"].append(el["info"]["name"])
-            new_leaderboard_l_dict["2"]["info"]["stars"].append(el["info"]["stars"])
-        elif new_leaderboard_l_dict["3"]["count"][0]["total"]==el["total"]:
-            new_leaderboard_l_dict["3"]["info"]["name"].append(el["info"]["name"])
-            new_leaderboard_l_dict["3"]["info"]["stars"].append(el["info"]["stars"])
-
-        elif el["total"]>new_leaderboard_l_dict["1"]["count"][0]["total"]:
-
-            #if the 1 is new, old 1 become 2 and old 2 second 3
-            new_leaderboard_l_dict["3"] = copy.deepcopy(new_leaderboard_l_dict["2"])
-            new_leaderboard_l_dict["2"] = copy.deepcopy(new_leaderboard_l_dict["1"])
-
-            new_leaderboard_l_dict["1"]["count"].clear()
-            new_leaderboard_l_dict["1"]["count"].append(el)
-            new_leaderboard_l_dict["1"]["info"].clear()
-            new_leaderboard_l_dict["1"]["info"]=el["info"]
-
-        elif el["total"]>new_leaderboard_l_dict["2"]["count"][0]["total"]:
-
-            new_leaderboard_l_dict["3"] = copy.deepcopy(new_leaderboard_l_dict["2"])
-
-            new_leaderboard_l_dict["2"]["count"].clear()
-            new_leaderboard_l_dict["2"]["count"].append(el)
-            new_leaderboard_l_dict["2"]["info"].clear()
-            new_leaderboard_l_dict["2"]["info"]=el["info"]
-
-        elif el["total"]>new_leaderboard_l_dict["3"]["count"][0]["total"]:
-
-            new_leaderboard_l_dict["3"]["count"].clear()
-            new_leaderboard_l_dict["3"]["count"].append(el)
-            new_leaderboard_l_dict["3"]["info"].clear()
-            new_leaderboard_l_dict["3"]["info"]=el["info"]
+def check_and_update_file(old_leadberboard_l_dict,array_new_gold,n_pos):
+    new_leaderboard_l_dict=old_leadberboard_l_dict
+    array_new_gold=sorted(array_new_gold, key = lambda item: item['count']['total'])
+    for el in array_new_gold[-n_pos:]:
+        new_leaderboard_l_dict=check_if_same_total(new_leaderboard_l_dict,el,n_pos)
+        new_leaderboard_l_dict=check_if_beetween_total(new_leaderboard_l_dict,el,n_pos)
     return new_leaderboard_l_dict
 
-def gold(old_leaderboard_l_dict,new_ships):
+def gold(old_leaderboard_l_dict,new_ships,n_pos):
     array_gold_new=[]
     user=new_ships["name"]
     for el in new_ships["ships"]:
-        gold_dict = dict({"1": 0, "2": 0, "3": 0, "total": 0,"info":{"stars":[0],"name":[""],"capacity": [0]}})
+        gold_dict = dict({"count":{"1": 0, "2": 0, "3": 0, "total": 0},"stars":0,"name":"","capacity": 0})
         for singol_drop in el["drops"]:
             if singol_drop=="GOLD_METEORITE":
-                gold_dict["info"]["stars"] = [el["stars"]]
-                gold_dict["info"]["name"] = [user]
-                gold_dict["info"]["capacity"] = [el["capacity"]]
+                gold_dict["stars"] = el["stars"]
+                gold_dict["name"] = user
+                gold_dict["capacity"] = el["capacity"]
+                gold_dict["identifier"] = el["identifier"]
                 for number in el["drops"]["GOLD_METEORITE"]:
-                    gold_dict[number]+=el["drops"]["GOLD_METEORITE"][number]["COMMON"]["count"]
-        gold_dict["total"]=gold_dict["1"]+(gold_dict["2"]*9)+(gold_dict["3"]*9*11)
+                    gold_dict["count"][number]+=el["drops"]["GOLD_METEORITE"][number]["COMMON"]["count"]
+        gold_dict["count"]["total"]=gold_dict["count"]["1"]+(gold_dict["count"]["2"]*9)+(gold_dict["count"]["3"]*9*11)
         array_gold_new.append(gold_dict)
 
-    return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
+    return check_and_update_file(old_leaderboard_l_dict,array_gold_new,n_pos)
 
 
-def update_leaderboard(old_leaderboard_dict,new_ships):
-    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships))
+def update_leaderboard(old_leaderboard_dict,new_ships,n_pos):
+    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships,n_pos))
     return old_leaderboard_dict
 
