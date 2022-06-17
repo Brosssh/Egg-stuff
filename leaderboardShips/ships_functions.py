@@ -26,8 +26,8 @@ def loots(res,server_manager):
         file_loot.append(ship_dict)
         c+=1
         #temp
-        if c>=4:
-            break
+        #if c>=4:
+            #break
         # temp
         # temp
 

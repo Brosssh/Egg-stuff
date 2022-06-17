@@ -53,10 +53,10 @@ new_ships=final_dict
 
 mongo=mongo_manager(conn)
 if not mongo.user_exists(encryptedEID):
-    #mongo.insert_full_user_ships(final_dict)
+    mongo.insert_full_user_ships(final_dict)
     print("Data successfully loaded!")
 else:
-    #new_ships=mongo.update_and_return_user_ships(final_dict,encryptedEID)
+    new_ships=mongo.update_and_return_user_ships(final_dict,encryptedEID)
     print("Data successfully updated!")
 
 
