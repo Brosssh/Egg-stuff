@@ -56,14 +56,16 @@ class mongo_manager:
                 return True
         except Exception as e:
             print(e)
-
-    def update_and_return_user_ships(self, final_dict, encryptedEID):
-        ships=self.__get_collection__().find({"EID":encryptedEID},{"ships":1})
-        list_already_stored=[]
+    def get_ID_ships_already_stored(self,encryptedEID):
+        ships = self.__get_collection__().find({"EID": encryptedEID}, {"ships": 1})
+        list_already_stored = []
         for el in ships:
             for i in range(len(el["ships"])):
                 list_already_stored.append(el["ships"][i]["identifier"])
+        return list_already_stored
 
+    def update_and_return_user_ships(self, final_dict, encryptedEID):
+        list_already_stored=self.get_ID_ships_already_stored(encryptedEID)
         to_append=[]
         for el in final_dict["ships"]:
             if el["identifier"] not in list_already_stored:

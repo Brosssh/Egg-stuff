@@ -5,13 +5,12 @@ from leaderboardShips.show_leaderboard import *
 
 print("This is a very test")
 
-#lines = open("D:/mongo_cred.txt", "r").read().split('\n')
-#user = lines[0]
-#pssw = lines[1]
+lines = open("D:/mongo_cred.txt", "r").read().split('\n')
+user = lines[0]
+pssw = lines[1]
 
-#conn = "mongodb+srv://" + user + ":" + pssw + "@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
+conn = "mongodb+srv://" + user + ":" + pssw + "@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
 
-conn="mongodb+srv://Ro0t:yfPVFbCPWhs7rCvW@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
 mongo = mongo_manager(conn)
 
 valid=False

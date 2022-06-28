@@ -20,13 +20,14 @@ def insert_EID(mongo):
         except:
             print("Insert valid EID (EI12345678)\n")
 
-    loot_dict=loots(result,server_manager)
+    encryptedEID = encrypt_string(EID)
+
+    loot_dict=loots(result,server_manager,mongo,encryptedEID)
 
     user_name=result.backup.user_name
 
     dict_loots=semplify_dict(loot_dict)
 
-    encryptedEID = encrypt_string(EID)
 
     final_dict={"EID":encryptedEID,"name":user_name,"ships":dict_loots}
 
