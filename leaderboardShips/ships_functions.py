@@ -8,13 +8,13 @@ def __get_array_ships_ID__(res): #get all exthens IDs
     ships = res.backup.artifacts_db.mission_archive
     return [el.identifier for el in ships if "HENERPRISE" in str(el) and "EPIC" in str(el) and "ARCHIVED" in str(el)]
 
-def loots(res,server_manager):
+def loots(res,server_manager, mongo, encryptedEID):
     file_loot=[]
-    #temp
-    c=0
+    already_stored_IDS=mongo.get_ID_ships_already_stored(encryptedEID)
+    new_ships=[el for el in __get_array_ships_ID__(res) if el not in already_stored_IDS]
     print("Please wait, DO NOT CLOSE THIS PAGE, maybe you can actually but please wait till the end and don't press STOP :)\n")
     print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n\n")
-    for el in tqdm(__get_array_ships_ID__(res)):
+    for el in tqdm(new_ships):
         ship_raw = server_manager.get_loot(el)
         ship_dict=(MessageToDict(ship_raw.info))
         n_drops=len(ship_raw.artifacts)
@@ -24,14 +24,6 @@ def loots(res,server_manager):
             drops.append(dict_temp)
         ship_dict["drop_List"]=drops
         file_loot.append(ship_dict)
-        c+=1
-        #temp
-      #  if c>=3:
-#            break
-        # temp
-        # temp
-
-
 
     return file_loot
 

@@ -26,7 +26,24 @@ def __get_leader_arrays__(mongo):
 
     return table,header
 
-def tabulate_func(mongo):
+#top n ships for users
+def get_table_top_n(table,n):
+    if n==0:
+        return table
+    users={}
+    new_table=[]
+    for el in table:
+        if el[1] in users.keys():
+            if users[el[1]]<n:
+                users[el[1]]+=1
+                new_table.append(el)
+        else:
+            users[el[1]]=1
+            new_table.append(el)
+    return new_table
+
+def tabulate_func(mongo,ships_number=200,n=0):
     table,header=__get_leader_arrays__(mongo)
-    print(tabulate(table,headers=header))
+    new_table=get_table_top_n(table,n)
+    print(tabulate(new_table[:ships_number],headers=header))
 
