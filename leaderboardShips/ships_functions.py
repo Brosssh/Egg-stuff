@@ -127,7 +127,7 @@ def check_and_update_file(old_leadberboard_l_dict,array_new_gold):
             new_leaderboard_l_dict = check_if_beetween_total(new_leaderboard_l_dict, el)
     return new_leaderboard_l_dict
 
-def gold(old_leaderboard_l_dict,new_ships,n_pos):
+def gold(old_leaderboard_l_dict,new_ships):
     array_gold_new=[]
     user=new_ships["name"]
     for el in new_ships["ships"]:
@@ -146,7 +146,7 @@ def gold(old_leaderboard_l_dict,new_ships,n_pos):
     return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
 
 
-def update_leaderboard(old_leaderboard_dict,new_ships,n_pos):
-    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships,n_pos))
+def update_leaderboard(old_leaderboard_dict,new_ships):
+    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships))
     return old_leaderboard_dict
 
