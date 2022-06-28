@@ -26,7 +26,7 @@ def __get_leader_arrays__(mongo):
 
     return table,header
 
-def tabulate_func(mongo):
+def tabulate_func(mongo,ships_number):
     table,header=__get_leader_arrays__(mongo)
-    print(tabulate(table,headers=header))
+    print(tabulate(table[:ships_number],headers=header))
 
