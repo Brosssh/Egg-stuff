@@ -1,6 +1,7 @@
 from tabulate import tabulate
 
-def show_leader(mongo):
+def __get_leader_arrays__(mongo):
+    header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3","Total gold"]
     table=[]
     leader_dict=mongo.get_leaderboard()
     for i in range(1,len(leader_dict["gold"])+1):
@@ -10,12 +11,22 @@ def show_leader(mongo):
             for j in range(len(leader_dict["gold"][str(i)]["name"])):
                 if sub_el=="count":
                     for el in leader_dict["gold"][str(i)][sub_el][j]:
-                        if el!="total":
-                            this_list.append(leader_dict["gold"][str(i)][sub_el][j][el])
+                        this_list.append(str(j)+":"+str(leader_dict["gold"][str(i)][sub_el][j][el]))
 
                 if sub_el!="identifier" and sub_el!="count":
-                    this_list.append(str(leader_dict["gold"][str(i)][sub_el][j]))
+                    this_list.append(str(j)+":"+str(leader_dict["gold"][str(i)][sub_el][j]))
 
-        table.append(this_list)
-    print(tabulate(table,headers=["Position","Name","Stars","Capacity","Tier 1","Tier 2","Tier 3"]))
+        for i in range(0,int((len(this_list)-1)/7)):
+            l=[this_list[0]]
+            for el in this_list[1:]:
+                ident,content=el.split(":")
+                if str(ident)==str(i):
+                    l.append(content)
+            table.append(l)
+
+    return table,header
+
+def tabulate_func(mongo):
+    table,header=__get_leader_arrays__(mongo)
+    print(tabulate(table,headers=header))
 

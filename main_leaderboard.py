@@ -1,6 +1,7 @@
 from leaderboardShips.new_EID import insert_EID
+from leaderboardShips.dubug_new_eid import insert_EID_dubug
 from leaderboardShips.mongoDB_manager import mongo_manager
-from leaderboardShips.show_leaderboard import show_leader
+from leaderboardShips.show_leaderboard import *
 
 print("This is a very test")
 
@@ -17,8 +18,9 @@ try:
     choice=str(input("Press 1 if you want to submit your EID, 2 to see the leaderboard: "))
     if choice=="1":
         insert_EID(mongo)
+        #insert_EID_dubug(mongo)
     elif choice=="2":
-        show_leader(mongo)
+        tabulate_func(mongo)
     else:
         print("Only 1 or 2 ")
 except:

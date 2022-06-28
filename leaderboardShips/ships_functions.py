@@ -81,16 +81,19 @@ def semplify_dict(file_dict):
         new_dict.append({"identifier":identifier,"stars":stars,"capacity":capacity, "drops":semplified_drops})
     return new_dict
 
-def check_if_same_total(leaderboard,current_el,n_pos):
-    for pos in [str(el) for el in range(1,n_pos+1)]:
+def check_if_same_total(leaderboard,current_el):
+    done_something=False
+    for pos in [str(el) for el in range(1,len(leaderboard)+1)]:
         if leaderboard[pos]["count"][0]["total"] == current_el["count"]["total"]:
             for sub_el in current_el:
                 leaderboard[pos][sub_el].append(current_el[sub_el])
-    return leaderboard
+            done_something=True
+    return leaderboard, done_something
 
 
-def move_all_down(start,stop,current_el,leaderboard):
-    for i in range(int(stop),int(start),-1):
+def move_all_down(start,current_el,leaderboard):
+    leaderboard[str(len(leaderboard)+1)]=copy.deepcopy(leaderboard[str(len(leaderboard))])
+    for i in range(len(leaderboard),int(start),-1):
         leaderboard[str(i)]=copy.deepcopy(leaderboard[str(i-1)])
     for sub_el in current_el:
         leaderboard[start][sub_el].clear()
@@ -98,20 +101,30 @@ def move_all_down(start,stop,current_el,leaderboard):
     return leaderboard
 
 
-def check_if_beetween_total(leaderboard,current_el,n_pos):
-    for pos in [str(el) for el in range(1, n_pos + 1)]:
+def check_if_beetween_total(leaderboard,current_el):
+    for pos in [str(el) for el in range(1, len(leaderboard) + 1)]:
         if current_el["count"]["total"]>leaderboard[pos]["count"][0]["total"]:
-            move_all_down(pos,n_pos,current_el,leaderboard)
-        return leaderboard
+            move_all_down(pos,current_el,leaderboard)
+            break
+
+    #new last
+    if current_el["count"]["total"] < leaderboard[str(len(leaderboard))]["count"][0]["total"]:
+        leaderboard[str(len(leaderboard) + 1)] = copy.deepcopy(leaderboard[str(len(leaderboard))])
+        for sub_el in current_el:
+            leaderboard[str(len(leaderboard))][sub_el].clear()
+            leaderboard[str(len(leaderboard))][sub_el].append(copy.deepcopy(current_el[sub_el]))
+    return leaderboard
 
 
 #this code below is shit, need to be fixed
-def check_and_update_file(old_leadberboard_l_dict,array_new_gold,n_pos):
+def check_and_update_file(old_leadberboard_l_dict,array_new_gold):
     new_leaderboard_l_dict=old_leadberboard_l_dict
     array_new_gold=sorted(array_new_gold, key = lambda item: item['count']['total'])
-    for el in array_new_gold[-n_pos:]:
-        new_leaderboard_l_dict=check_if_same_total(new_leaderboard_l_dict,el,n_pos)
-        new_leaderboard_l_dict=check_if_beetween_total(new_leaderboard_l_dict,el,n_pos)
+    for el in array_new_gold:
+        new_leaderboard_l_dict,done_something=check_if_same_total(new_leaderboard_l_dict,el)
+        #if i have already found a number with same total i don't need to check if it's between
+        if not done_something:
+            new_leaderboard_l_dict = check_if_beetween_total(new_leaderboard_l_dict, el)
     return new_leaderboard_l_dict
 
 def gold(old_leaderboard_l_dict,new_ships,n_pos):
@@ -130,7 +143,7 @@ def gold(old_leaderboard_l_dict,new_ships,n_pos):
         gold_dict["count"]["total"]=gold_dict["count"]["1"]+(gold_dict["count"]["2"]*9)+(gold_dict["count"]["3"]*9*11)
         array_gold_new.append(gold_dict)
 
-    return check_and_update_file(old_leaderboard_l_dict,array_gold_new,n_pos)
+    return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
 
 
 def update_leaderboard(old_leaderboard_dict,new_ships,n_pos):
