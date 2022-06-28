@@ -1,4 +1,6 @@
 #MONGO IS NOT THE OPTIMAL CHOICE, IK, BUT IT'S FREE SO I'LL USE IT
+import copy
+
 from pymongo import MongoClient
 
 class mongo_manager:
@@ -71,7 +73,7 @@ class mongo_manager:
             #get old doc
             doc=self.get_full_from_eid(encryptedEID)
             #contains a dict of only the new ships
-            to_return=doc.copy()
+            to_return=copy.deepcopy(doc)
             to_return["ships"]=to_return["ships"].clear()
             to_return["ships"]=[]
             for el in to_append:
