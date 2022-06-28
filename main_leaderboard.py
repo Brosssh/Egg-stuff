@@ -26,7 +26,19 @@ while not valid:
             try:
                 ships_number = int(input("How many ships do you want to display? "))
                 if ships_number>0:
-                    tabulate_func(mongo,ships_number)
+                    valid_n_number = False
+                    while not valid_n_number:
+                        try:
+                            n_number = int(input("How many ships per person do you want to display? (Top n total gold, enter 0 if you want to display all of them)...  "))
+                            if n_number >= 0:
+                                tabulate_func(mongo, ships_number, n_number)
+                                valid_n_number = False
+                                ships_number = False
+                                break
+                            else:
+                                print("Only a positive number or 0 is accepted\n")
+                        except:
+                            print("Only a positive number or 0 is accepted\n")
                 else:
                     print("Only a positive number is accepted\n")
             except:
