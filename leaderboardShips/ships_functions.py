@@ -8,6 +8,21 @@ def __get_array_ships_ID__(res): #get all exthens IDs
     ships = res.backup.artifacts_db.mission_archive
     return [el.identifier for el in ships if "HENERPRISE" in str(el) and "EPIC" in str(el) and "ARCHIVED" in str(el)]
 
+def all_loots_only_debug(res,server_manager):
+    file_loot=[]
+    for el in tqdm(__get_array_ships_ID__(res)):
+        ship_raw = server_manager.get_loot(el)
+        ship_dict=(MessageToDict(ship_raw.info))
+        n_drops=len(ship_raw.artifacts)
+        drops=[]
+        for i in range(n_drops):
+            dict_temp=MessageToDict(ship_raw.artifacts[i])
+            drops.append(dict_temp)
+        ship_dict["drop_List"]=drops
+        file_loot.append(ship_dict)
+
+    return file_loot
+
 def loots(res,server_manager, mongo, encryptedEID):
     file_loot=[]
     already_stored_IDS=mongo.get_ID_ships_already_stored(encryptedEID)
@@ -73,6 +88,9 @@ def semplify_dict(file_dict):
         new_dict.append({"identifier":identifier,"stars":stars,"capacity":capacity, "drops":semplified_drops})
     return new_dict
 
+
+################################################################################
+#To build the leaderboard
 def check_if_same_total(leaderboard,current_el):
     done_something=False
     for pos in [str(el) for el in range(1,len(leaderboard)+1)]:
@@ -108,37 +126,52 @@ def check_if_beetween_total(leaderboard,current_el):
     return leaderboard
 
 
-#this code below is shit, need to be fixed
-def check_and_update_file(old_leadberboard_l_dict,array_new_gold):
+def check_and_update_file(old_leadberboard_l_dict,array_new_ingr):
     new_leaderboard_l_dict=old_leadberboard_l_dict
-    array_new_gold=sorted(array_new_gold, key = lambda item: item['count']['total'])
-    for el in array_new_gold:
+    array_new_ingr=sorted(array_new_ingr, key = lambda item: item['count']['total'])
+    for el in array_new_ingr:
         new_leaderboard_l_dict,done_something=check_if_same_total(new_leaderboard_l_dict,el)
         #if i have already found a number with same total i don't need to check if it's between
         if not done_something:
             new_leaderboard_l_dict = check_if_beetween_total(new_leaderboard_l_dict, el)
     return new_leaderboard_l_dict
 
-def gold(old_leaderboard_l_dict,new_ships):
-    array_gold_new=[]
+def ingredients(old_leaderboard_l_dict,new_ships,ingr_name):
+    array_ing_new=[]
     user=new_ships["name"]
     for el in new_ships["ships"]:
-        gold_dict = dict({"count":{"1": 0, "2": 0, "3": 0, "total": 0},"stars":0,"name":"","capacity": 0})
+        ingr_dict = dict({"count":{"1": 0, "2": 0, "3": 0, "total": 0},"stars":0,"name":"","capacity": 0})
         for singol_drop in el["drops"]:
-            if singol_drop=="GOLD_METEORITE":
-                gold_dict["stars"] = el["stars"]
-                gold_dict["name"] = user
-                gold_dict["capacity"] = el["capacity"]
-                gold_dict["identifier"] = el["identifier"]
-                for number in el["drops"]["GOLD_METEORITE"]:
-                    gold_dict["count"][number]+=el["drops"]["GOLD_METEORITE"][number]["COMMON"]["count"]
-        gold_dict["count"]["total"]=gold_dict["count"]["1"]+(gold_dict["count"]["2"]*9)+(gold_dict["count"]["3"]*9*11)
-        array_gold_new.append(gold_dict)
+            if singol_drop==ingr_name:
+                ingr_dict["stars"] = el["stars"]
+                ingr_dict["name"] = user
+                ingr_dict["capacity"] = el["capacity"]
+                ingr_dict["identifier"] = el["identifier"]
+                for number in el["drops"][ingr_name]:
+                    ingr_dict["count"][number]+=el["drops"][ingr_name][number]["COMMON"]["count"]
 
-    return check_and_update_file(old_leaderboard_l_dict,array_gold_new)
+        #total is calculated at t1 + (t2 * t1_required for a t2) + (t3 * t2_required for a t3)
+
+        #example 1 t1 gold, 5 t2 gold, and 3 t3 gold are (1) + (5*9) + (3*9*11)
+        #since a t2 is made with 9 t1 and a t3 is made with 11 t2
+        t2_mult= 9 if ingr_name == "GOLD_METEORITE" else 12 if ingr_name =="TAU_CETI_GEODE" else \
+            10 if ingr_name =="SOLAR_TITANIUM" else 0
+        t3_mult=t2_mult*(11 if ingr_name == "GOLD_METEORITE" else 14 if ingr_name =="TAU_CETI_GEODE"
+            else 12 if ingr_name =="SOLAR_TITANIUM" else 0)
+
+
+        ingr_dict["count"]["total"]=ingr_dict["count"]["1"]+(ingr_dict["count"]["2"]*t2_mult)+(ingr_dict["count"]["3"]*t3_mult)
+        if ingr_dict["count"]["total"] > 0:
+            array_ing_new.append(ingr_dict)
+
+    return check_and_update_file(old_leaderboard_l_dict,array_ing_new)
 
 
 def update_leaderboard(old_leaderboard_dict,new_ships):
-    old_leaderboard_dict["gold"]=(gold(old_leaderboard_dict["gold"],new_ships))
+    old_leaderboard_dict["gold"]=(ingredients(old_leaderboard_dict["gold"],new_ships,"GOLD_METEORITE"))
+    old_leaderboard_dict["tau"] = (ingredients(old_leaderboard_dict["tau"], new_ships, "TAU_CETI_GEODE"))
+    old_leaderboard_dict["titanium"] = (ingredients(old_leaderboard_dict["titanium"], new_ships, "SOLAR_TITANIUM"))
     return old_leaderboard_dict
+
+################################################################################
 

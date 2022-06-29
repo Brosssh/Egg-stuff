@@ -1,6 +1,7 @@
 #MONGO IS NOT THE OPTIMAL CHOICE, IK, BUT IT'S FREE SO I'LL USE IT
 import copy
 
+from bson import ObjectId
 from pymongo import MongoClient
 
 class mongo_manager:
@@ -56,6 +57,11 @@ class mongo_manager:
                 return True
         except Exception as e:
             print(e)
+
+    def get_all_encrypted_IDs(self):
+        array_id = self.__get_collection__().find({}, {"EID": 1})
+        return array_id
+
     def get_ID_ships_already_stored(self,encryptedEID):
         ships = self.__get_collection__().find({"EID": encryptedEID}, {"ships": 1})
         list_already_stored = []
@@ -89,16 +95,20 @@ class mongo_manager:
 
     def get_leaderboard(self):
         try:
-            return self.__get_leaderboard_coll__().find_one()
+            return self.__get_leaderboard_coll__().find_one({"_id":ObjectId("62bad613103e3eb4632d8a50")})
         except Exception as e:
             print(e)
 
-    def load_updated_leaderboard(self, leaderboard_updated):
+    def load_updated_document(self, leaderboard_updated,id):
         try:
-            self.__get_leaderboard_coll__().delete_one({})
+            self.__get_leaderboard_coll__().delete_one({"_id":id})
             self.__get_leaderboard_coll__().insert_one(leaderboard_updated)
             print("Leaderboard updated")
         except Exception as e:
             print(e)
-
+    def get_leaderboard_full_ingredients(self):
+        try:
+            return self.__get_leaderboard_coll__().find_one({"_id": ObjectId("62bc1395103e3eb463ae2df6")})
+        except Exception as e:
+            print(e)
 

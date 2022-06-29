@@ -1,20 +1,20 @@
 from tabulate import tabulate
 
-def __get_leader_arrays__(mongo):
-    header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3","Total gold"]
+def __get_leader_arrays__(mongo,obj):
+    header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3","Total "+obj]
     table=[]
-    leader_dict=mongo.get_leaderboard()
-    for i in range(1,len(leader_dict["gold"])+1):
+    leader_dict=mongo.get_leaderboard_full_ingredients()
+    for i in range(1,len(leader_dict[obj])+1):
         this_list = []
         this_list.append(str(i))
-        for sub_el in leader_dict["gold"][str(i)]:
-            for j in range(len(leader_dict["gold"][str(i)]["name"])):
+        for sub_el in leader_dict[obj][str(i)]:
+            for j in range(len(leader_dict[obj][str(i)]["name"])):
                 if sub_el=="count":
-                    for el in leader_dict["gold"][str(i)][sub_el][j]:
-                        this_list.append(str(j)+":"+str(leader_dict["gold"][str(i)][sub_el][j][el]))
+                    for el in leader_dict[obj][str(i)][sub_el][j]:
+                        this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j][el]))
 
                 if sub_el!="identifier" and sub_el!="count":
-                    this_list.append(str(j)+":"+str(leader_dict["gold"][str(i)][sub_el][j]))
+                    this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j]))
 
         for i in range(0,int((len(this_list)-1)/7)):
             l=[this_list[0]]
@@ -42,8 +42,8 @@ def get_table_top_n(table,n):
             new_table.append(el)
     return new_table
 
-def tabulate_func(mongo,ships_number=200,n=0):
-    table,header=__get_leader_arrays__(mongo)
+def tabulate_func(mongo,obj,ships_number=200,n=0):
+    table,header=__get_leader_arrays__(mongo,obj)
     new_table=get_table_top_n(table,n)
-    print(tabulate(new_table[:ships_number],headers=header))
+    print(tabulate(new_table[:ships_number],headers=header, showindex="always"))
 
