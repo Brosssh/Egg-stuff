@@ -45,5 +45,5 @@ def get_table_top_n(table,n):
 def tabulate_func(mongo,obj,ships_number=200,n=0):
     table,header=__get_leader_arrays__(mongo,obj)
     new_table=get_table_top_n(table,n)
-    print(tabulate(new_table[:ships_number],headers=header, showindex="always"))
+    print(tabulate(new_table[:ships_number+1],headers=header, showindex="always"))
 

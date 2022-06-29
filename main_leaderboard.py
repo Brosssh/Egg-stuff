@@ -33,6 +33,7 @@ while not valid:
                                     if n_number >= 0:
                                         tabulate_func(mongo,ingredient_choice,ships_number, n_number)
                                         valid_ships_number=True
+                                        print("\n\n")
                                         break
                                     else:
                                         print("Only a positive number or 0 is accepted\n")
