@@ -1,4 +1,3 @@
-from leaderboardShips.dubug_new_eid import force_leader_update
 from leaderboardShips.new_EID import insert_EID
 from leaderboardShips.mongoDB_manager import mongo_manager
 from leaderboardShips.show_leaderboard import *
@@ -23,7 +22,7 @@ while not valid:
         ing_input_valid=False
         valid_ships_number = False
         while not ing_input_valid:
-            ing_input=str(input("Enter G to dislay gold meteorite, C for tau ceti and T for titanium...\n\nIf you want to display a stone, please input the name of the stone (shell,lunar,...): "))
+            ing_input=str(input("\nEnter G to dislay gold meteorite, C for tau ceti and T for titanium...\nIf you want to display a stone, please input the name of the stone (shell,lunar,...): "))
             if ing_input=="G" or ing_input=="C" or ing_input=="T" or ing_input.upper()+"_STONE" in stones_array:
                 ingredient_choice="gold" if ing_input =="G" else "tau" if ing_input =="C" else "titanium" if ing_input =="T" else ing_input.lower()+"_stone"
                 while not valid_ships_number:
