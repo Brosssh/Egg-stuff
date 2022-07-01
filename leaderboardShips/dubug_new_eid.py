@@ -8,7 +8,7 @@ def force_leader_update(mongo):
     for el in ids:
         new_ships=mongo.get_full_from_eid(el["EID"])
 
-        leaderboard_dict = mongo.get_leaderboard_full_ingredients()
+        leaderboard_dict = mongo.get_leaderboard_stone_ingr()
 
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
         mongo.load_updated_document(leaderboard_updated,leaderboard_updated["_id"])
@@ -37,7 +37,7 @@ def insert_EID_dubug(mongo):
 
     if new_ships is not None:
         #leaderboard_dict = mongo.get_leaderboard()
-        leaderboard_dict = mongo.get_leaderboard_test()
+        leaderboard_dict = mongo.get_leaderboard_stone_ingr()
 
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
         mongo.load_updated_document(leaderboard_updated,leaderboard_updated["_id"])

@@ -1,3 +1,4 @@
+from leaderboardShips.dubug_new_eid import force_leader_update
 from leaderboardShips.new_EID import insert_EID
 from leaderboardShips.mongoDB_manager import mongo_manager
 from leaderboardShips.show_leaderboard import *
@@ -7,6 +8,9 @@ user = lines[0]
 pssw = lines[1]
 
 conn = "mongodb+srv://" + user + ":" + pssw + "@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
+
+stones_array = ["CLARITY_STONE", "LUNAR_STONE", "PROPHECY_STONE", "LIFE_STONE", "QUANTUM_STONE", "DILITHIUM_STONE",
+                "SOUL_STONE", "TERRA_STONE", "TACHYON_STONE", "SHELL_STONE"]
 
 mongo = mongo_manager(conn)
 
@@ -19,9 +23,9 @@ while not valid:
         ing_input_valid=False
         valid_ships_number = False
         while not ing_input_valid:
-            ing_input=str(input("Enter G to dislay gold meteorite, C for tau ceti and T for titanium: "))
-            if ing_input=="G" or ing_input=="C" or ing_input=="T":
-                ingredient_choice="gold" if ing_input =="G" else "tau" if ing_input =="C" else "titanium" if ing_input =="T" else None
+            ing_input=str(input("Enter G to dislay gold meteorite, C for tau ceti and T for titanium...\n\nIf you want to display a stone, please input the name of the stone (shell,lunar,...): "))
+            if ing_input=="G" or ing_input=="C" or ing_input=="T" or ing_input.upper()+"_STONE" in stones_array:
+                ingredient_choice="gold" if ing_input =="G" else "tau" if ing_input =="C" else "titanium" if ing_input =="T" else ing_input.lower()+"_stone"
                 while not valid_ships_number:
                     try:
                         ships_number = int(input("How many ships do you want to display? "))
@@ -45,6 +49,6 @@ while not valid:
                         print("Only a positive number is accepted\n")
                 break
             else:
-                print("Only a G, C or T\n")
+                print("Only G, C, T or a stone name")
     else:
         print("Only 1 or 2 ")

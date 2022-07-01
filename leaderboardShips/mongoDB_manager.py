@@ -93,9 +93,9 @@ class mongo_manager:
         else:
             return None
 
-    def get_leaderboard(self):
+    def get_leaderboard_stone_ingr(self):
         try:
-            return self.__get_leaderboard_coll__().find_one({"_id":ObjectId("62bad613103e3eb4632d8a50")})
+            return self.__get_leaderboard_coll__().find_one({"_id":ObjectId("62bea7e7103e3eb4639db3ea")})
         except Exception as e:
             print(e)
 
@@ -106,6 +106,7 @@ class mongo_manager:
             print("Leaderboard updated")
         except Exception as e:
             print(e)
+
     def get_leaderboard_full_ingredients(self):
         try:
             return self.__get_leaderboard_coll__().find_one({"_id": ObjectId("62bc1395103e3eb463ae2df6")})

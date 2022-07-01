@@ -166,11 +166,72 @@ def ingredients(old_leaderboard_l_dict,new_ships,ingr_name):
 
     return check_and_update_file(old_leaderboard_l_dict,array_ing_new)
 
+def stones(old_leaderboard_l_dict,new_ships,stone_name):
+    array_stone_new=[]
+    user=new_ships["name"]
+    for el in new_ships["ships"]:
+        stone_dict = dict({"count":{"1": 0, "2": 0, "3": 0,"4":0,"total": 0},"stars":0,"name":"","capacity": 0})
+        for singol_drop in el["drops"]:
+            if singol_drop==stone_name:
+                stone_dict["stars"] = el["stars"]
+                stone_dict["name"] = user
+                stone_dict["capacity"] = el["capacity"]
+                stone_dict["identifier"] = el["identifier"]
+                for number in el["drops"][stone_name]:
+                    stone_dict["count"][number]+=el["drops"][stone_name][number]["COMMON"]["count"]
+            frag_name=stone_name + "_FRAGMENT"
+            if singol_drop == frag_name:
+                stone_dict["stars"] = el["stars"]
+                stone_dict["name"] = user
+                stone_dict["capacity"] = el["capacity"]
+                stone_dict["identifier"] = el["identifier"]
+                for number in el["drops"][frag_name]:
+                    stone_dict["count"][number]+=el["drops"][frag_name][number]["COMMON"]["count"]
+
+
+        t2_mult= 20 #every t2 is made with 20 t1
+        t3_mult=t2_mult*(
+            10 if stone_name == "CLARITY_STONE" else
+            20 if stone_name == "LUNAR_STONE" else
+            10 if stone_name == "PROPHECY_STONE" else
+            12 if stone_name == "LIFE_STONE" else
+            15 if stone_name == "QUANTUM_STONE" else
+            12 if stone_name == "DILITHIUM_STONE" else
+            15 if stone_name == "SOUL_STONE" else
+            15 if stone_name == "TERRA_STONE" else
+            15 if stone_name == "TACHYON_STONE" else
+            20 if stone_name == "SHELL_STONE" else
+            0)
+        t4_mult = t3_mult * (
+            20 if stone_name == "CLARITY_STONE" else
+            25 if stone_name == "LUNAR_STONE" else
+            12 if stone_name == "PROPHECY_STONE" else
+            15 if stone_name == "LIFE_STONE" else
+            20 if stone_name == "QUANTUM_STONE" else
+            15 if stone_name == "DILITHIUM_STONE" else
+            20 if stone_name == "SOUL_STONE" else
+            20 if stone_name == "TERRA_STONE" else
+            20 if stone_name == "TACHYON_STONE" else
+            10 if stone_name == "SHELL_STONE" else
+                0)
+
+        stone_dict["count"]["total"]=stone_dict["count"]["1"]+(stone_dict["count"]["2"]*t2_mult)+(stone_dict["count"]["3"]*t3_mult)+(stone_dict["count"]["4"]*t4_mult)
+        if stone_dict["count"]["total"] > 0:
+            array_stone_new.append(stone_dict)
+
+    return check_and_update_file(old_leaderboard_l_dict,array_stone_new)
+
 
 def update_leaderboard(old_leaderboard_dict,new_ships):
     old_leaderboard_dict["gold"]=(ingredients(old_leaderboard_dict["gold"],new_ships,"GOLD_METEORITE"))
     old_leaderboard_dict["tau"] = (ingredients(old_leaderboard_dict["tau"], new_ships, "TAU_CETI_GEODE"))
     old_leaderboard_dict["titanium"] = (ingredients(old_leaderboard_dict["titanium"], new_ships, "SOLAR_TITANIUM"))
+
+    stones_array=["CLARITY_STONE","LUNAR_STONE","PROPHECY_STONE","LIFE_STONE","QUANTUM_STONE","DILITHIUM_STONE","SOUL_STONE","TERRA_STONE","TACHYON_STONE","SHELL_STONE"]
+    for el in stones_array:
+        old_leaderboard_dict[el.lower()] = (stones(old_leaderboard_dict[el.lower()], new_ships, el))
+
+
     return old_leaderboard_dict
 
 ################################################################################
