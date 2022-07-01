@@ -1,17 +1,15 @@
 from leaderboardShips.ships_functions import *
-from server_manager import server
 from utiliy import encrypt_string
-import os
 
 def force_leader_update(mongo):
     ids=mongo.get_all_encrypted_IDs()
     for el in ids:
         new_ships=mongo.get_full_from_eid(el["EID"])
 
-        leaderboard_dict = mongo.get_leaderboard_stone_ingr()
-
+        leaderboard_dict = mongo.build_full_leaderboard()
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
-        mongo.load_updated_document(leaderboard_updated,leaderboard_updated["_id"])
+        for el in leaderboard_updated:
+            mongo.load_updated_document_by_name(leaderboard_updated[el], el)
 
 def insert_EID_dubug(mongo):
 
@@ -36,10 +34,11 @@ def insert_EID_dubug(mongo):
             print("No new ships")
 
     if new_ships is not None:
-        #leaderboard_dict = mongo.get_leaderboard()
-        leaderboard_dict = mongo.get_leaderboard_stone_ingr()
 
+        leaderboard_dict=mongo.build_full_leaderboard()
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
-        mongo.load_updated_document(leaderboard_updated,leaderboard_updated["_id"])
+        for el in leaderboard_updated:
+            mongo.load_updated_document_by_name(leaderboard_updated[el],el)
+
         print("OK")
 

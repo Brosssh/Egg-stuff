@@ -1,3 +1,4 @@
+from leaderboardShips.dubug_new_eid import insert_EID_dubug, force_leader_update
 from leaderboardShips.new_EID import insert_EID
 from leaderboardShips.mongoDB_manager import mongo_manager
 from leaderboardShips.show_leaderboard import *
@@ -17,7 +18,9 @@ valid=False
 while not valid:
     choice=str(input("Press 1 if you want to submit your EID, 2 to see the leaderboard: "))
     if choice=="1":
-        insert_EID(mongo)
+        #insert_EID(mongo)
+        #insert_EID_dubug(mongo)
+        force_leader_update(mongo)
     elif choice=="2":
         ing_input_valid=False
         valid_ships_number = False

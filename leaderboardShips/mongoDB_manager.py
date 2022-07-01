@@ -107,9 +107,33 @@ class mongo_manager:
         except Exception as e:
             print(e)
 
-    def get_leaderboard_full_ingredients(self):
+    def load_updated_document_by_name(self, leaderboard_updated,name):
         try:
-            return self.__get_leaderboard_coll__().find_one({"_id": ObjectId("62bc1395103e3eb463ae2df6")})
+            self.__get_leaderboard_coll__().delete_one({"name":name})
+            self.__get_leaderboard_coll__().insert_one({"name":name,"content":leaderboard_updated})
+            print("Leaderboard updated")
+        except Exception as e:
+            print(e)
+
+    def get_leaderboard_test(self):
+        try:
+            return self.__get_leaderboard_coll__().find_one({"type": "artifacts"})
+        except Exception as e:
+            print(e)
+
+    def build_full_leaderboard(self):
+        try:
+            all_docs=[el for el in self.__get_leaderboard_coll__().find({"name":{"$exists":1}})]
+            big_dict={}
+            for el in all_docs:
+                big_dict[el["name"]]=el["content"]
+            return big_dict
+        except Exception as e:
+            print(e)
+
+    def get_leaderboard_by_name(self,name):
+        try:
+            return self.__get_leaderboard_coll__().find_one({"name": name})
         except Exception as e:
             print(e)
 

@@ -47,8 +47,10 @@ def insert_EID(mongo):
             print("No new ships")
 
     if new_ships is not None:
-        leaderboard_dict = mongo.get_leaderboard_stone_ingr()
 
-        leaderboard_updated=update_leaderboard(leaderboard_dict,new_ships)
-        mongo.load_updated_document(leaderboard_updated,leaderboard_updated["_id"])
+        leaderboard_dict = mongo.build_full_leaderboard()
+        leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
+        for el in leaderboard_updated:
+            mongo.load_updated_document_by_name(leaderboard_updated[el], el)
+        print("\nThanks for your submission :)\n")
 

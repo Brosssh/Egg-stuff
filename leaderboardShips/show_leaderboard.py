@@ -30,7 +30,7 @@ def __get_leader_arrays_ingr__(mongo,obj):
 def __get_leader_arrays_stone__(mongo,obj):
     header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3", "Tier 4","Total "+obj]
     table=[]
-    leader_dict=mongo.get_leaderboard_stone_ingr()
+    leader_dict=mongo.build_full_leaderboard()
     for i in range(1,len(leader_dict[obj])+1):
         this_list = []
         this_list.append(str(i))
