@@ -18,9 +18,7 @@ valid=False
 while not valid:
     choice=str(input("Press 1 if you want to submit your EID, 2 to see the leaderboard: "))
     if choice=="1":
-        #insert_EID(mongo)
-        #insert_EID_dubug(mongo)
-        force_leader_update(mongo)
+        insert_EID(mongo)
     elif choice=="2":
         ing_input_valid=False
         valid_ships_number = False
