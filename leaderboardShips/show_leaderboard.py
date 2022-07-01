@@ -3,18 +3,18 @@ from tabulate import tabulate
 def __get_leader_arrays_ingr__(mongo,obj):
     header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3","Total "+obj]
     table=[]
-    leader_dict=mongo.get_leaderboard_stone_ingr()
-    for i in range(1,len(leader_dict[obj])+1):
+    leader_dict=mongo.get_leaderboard_by_name(obj)
+    for i in range(1,len(leader_dict["content"])+1):
         this_list = []
         this_list.append(str(i))
-        for sub_el in leader_dict[obj][str(i)]:
-            for j in range(len(leader_dict[obj][str(i)]["name"])):
+        for sub_el in leader_dict["content"][str(i)]:
+            for j in range(len(leader_dict["content"][str(i)]["name"])):
                 if sub_el=="count":
-                    for el in leader_dict[obj][str(i)][sub_el][j]:
-                        this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j][el]))
+                    for el in leader_dict["content"][str(i)][sub_el][j]:
+                        this_list.append(str(j)+":"+str(leader_dict["content"][str(i)][sub_el][j][el]))
 
                 if sub_el!="identifier" and sub_el!="count":
-                    this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j]))
+                    this_list.append(str(j)+":"+str(leader_dict["content"][str(i)][sub_el][j]))
 
         for i in range(0,int((len(this_list)-1)/7)):
             l=[this_list[0]]
@@ -30,18 +30,18 @@ def __get_leader_arrays_ingr__(mongo,obj):
 def __get_leader_arrays_stone__(mongo,obj):
     header = ["Position", "Name", "Stars", "Capacity", "Tier 1", "Tier 2", "Tier 3", "Tier 4","Total "+obj]
     table=[]
-    leader_dict=mongo.build_full_leaderboard()
-    for i in range(1,len(leader_dict[obj])+1):
+    leader_dict = mongo.get_leaderboard_by_name(obj)
+    for i in range(1, len(leader_dict["content"]) + 1):
         this_list = []
         this_list.append(str(i))
-        for sub_el in leader_dict[obj][str(i)]:
-            for j in range(len(leader_dict[obj][str(i)]["name"])):
+        for sub_el in leader_dict["content"][str(i)]:
+            for j in range(len(leader_dict["content"][str(i)]["name"])):
                 if sub_el=="count":
-                    for el in leader_dict[obj][str(i)][sub_el][j]:
-                        this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j][el]))
+                    for el in leader_dict["content"][str(i)][sub_el][j]:
+                        this_list.append(str(j)+":"+str(leader_dict["content"][str(i)][sub_el][j][el]))
 
                 if sub_el!="identifier" and sub_el!="count":
-                    this_list.append(str(j)+":"+str(leader_dict[obj][str(i)][sub_el][j]))
+                    this_list.append(str(j)+":"+str(leader_dict["content"][str(i)][sub_el][j]))
 
         for i in range(0,int((len(this_list)-1)/8)):
             l=[this_list[0]]
