@@ -103,7 +103,7 @@ class mongo_manager:
         try:
             self.__get_leaderboard_coll__().delete_one({"_id":id})
             self.__get_leaderboard_coll__().insert_one(leaderboard_updated)
-            print("Leaderboard updated")
+            #print("Leaderboard updated")
         except Exception as e:
             print(e)
 

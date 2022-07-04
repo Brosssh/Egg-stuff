@@ -1,5 +1,5 @@
 import json
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from google.protobuf.json_format import MessageToJson, MessageToDict
 import copy
 
