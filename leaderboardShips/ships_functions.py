@@ -1,4 +1,3 @@
-import json
 from tqdm.auto import tqdm
 from google.protobuf.json_format import MessageToJson, MessageToDict
 import copy
@@ -30,15 +29,18 @@ def loots(res,server_manager, mongo, encryptedEID):
     print("Please wait, DO NOT CLOSE THIS PAGE, maybe you can actually but please wait till the end and don't press STOP :)\n")
     print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n\n")
     for el in tqdm(new_ships):
-        ship_raw = server_manager.get_loot(el)
-        ship_dict=(MessageToDict(ship_raw.info))
-        n_drops=len(ship_raw.artifacts)
-        drops=[]
-        for i in range(n_drops):
-            dict_temp=MessageToDict(ship_raw.artifacts[i])
-            drops.append(dict_temp)
-        ship_dict["drop_List"]=drops
-        file_loot.append(ship_dict)
+        try:
+            ship_raw = server_manager.get_loot(el)
+            ship_dict=(MessageToDict(ship_raw.info))
+            n_drops=len(ship_raw.artifacts)
+            drops=[]
+            for i in range(n_drops):
+                dict_temp=MessageToDict(ship_raw.artifacts[i])
+                drops.append(dict_temp)
+            ship_dict["drop_List"]=drops
+            file_loot.append(ship_dict)
+        except:
+            print("Skipping one ship due to bad server response")
 
     return file_loot
 
@@ -166,7 +168,8 @@ def ingredients(old_leaderboard_l_dict,new_ships,ingr_name):
 
     return check_and_update_file(old_leaderboard_l_dict,array_ing_new)
 
-def stones(old_leaderboard_l_dict,new_ships,stone_name):
+def stones(old_leaderboard_l_dict,new_ships,stone):
+    stone_name=stone.upper()+"_STONE"
     array_stone_new=[]
     user=new_ships["name"]
     for el in new_ships["ships"]:

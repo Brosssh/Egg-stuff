@@ -137,3 +137,20 @@ class mongo_manager:
         except Exception as e:
             print(e)
 
+    def get_leaderboards_names(self):
+        try:
+            l=self.__get_leaderboard_coll__().find({},{"name":1})
+            return [el["name"] for el in l]
+        except Exception as e:
+            print(e)
+
+    def insert_clear_leaderboard(self):
+        try:
+            for el in ["gold","tau","titanium"]:
+                self.__get_leaderboard_coll__().insert_one({"name":el,"content":[{"1": 0,"2":0,"3": 0,"total": 0}]})
+            for el in ["clarity", "lunar", "prophecy", "life", "quantum", "dilithium",
+                "soul", "terra", "tachyon", "shell"]:
+                self.__get_leaderboard_coll__().insert_one(
+                    {"name": el, "content": [{"1": 0, "2": 0, "3": 0,"4": 0, "total": 0}]})
+        except Exception as e:
+            print(e)

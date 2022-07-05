@@ -1,7 +1,10 @@
+import json
+
 from leaderboardShips.ships_functions import *
 from utiliy import encrypt_string
 
 def force_leader_update(mongo):
+    mongo.insert_clear_leaderboard()
     ids=mongo.get_all_encrypted_IDs()
     for el in ids:
         new_ships=mongo.get_full_from_eid(el["EID"])
