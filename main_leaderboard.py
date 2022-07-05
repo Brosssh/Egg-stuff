@@ -21,7 +21,7 @@ while True:
             elif choice=="2":
                 inp=ask_and_wait_valid_answer(mongo.get_leaderboards_names(),"Enter the item you want to show the leaderboard for (check this Replit description for the list of possible input): ")
                 top_n=ask_and_wait_pos_integer("How many ships do you want to display? ")
-                top_n_person=ask_and_wait_pos_integer("How many ships per person do you want to display? (Top n for the total, enter 0 if you want to display all of them): ")
+                top_n_person=ask_and_wait_pos_integer("How many ships per person do you want to display? (Top n for the total): ")
                 tabulate_func(mongo, inp, top_n, top_n_person)
         except Exception as e:
             print(e)

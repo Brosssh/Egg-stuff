@@ -47,10 +47,10 @@ def insert_EID(mongo):
             print("No new ships")
 
     if new_ships is not None:
-
+        print("\nUpdating the leaderboard with your ships (it will take up to a minute)\n")
         leaderboard_dict = mongo.build_full_leaderboard()
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
-        for el in leaderboard_updated:
+        for el in tqdm(leaderboard_updated):
             mongo.load_updated_document_by_name(leaderboard_updated[el], el)
         print("\nThanks for your submission :)\n")
 
