@@ -2,6 +2,8 @@ from tqdm.auto import tqdm
 from google.protobuf.json_format import MessageToJson, MessageToDict
 import copy
 
+import utiliy
+
 
 def __get_array_ships_ID__(res): #get all exthens IDs
     ships = res.backup.artifacts_db.mission_archive
@@ -223,6 +225,53 @@ def stones(old_leaderboard_l_dict,new_ships,stone_name):
 
     return check_and_update_file(old_leaderboard_l_dict,array_stone_new)
 
+def artifacts(old_leaderboard_l_dict,new_ships,arti_name):
+    array_arti_new=[]
+    user=new_ships["name"]
+    for el in new_ships["ships"]:
+        arti_dict = dict({"count":{"1": 0, "2": 0, "3": 0,"4":0,"total": 0},"stars":0,"name":"","capacity": 0})
+        for singol_drop in el["drops"]:
+            if singol_drop==arti_name:
+                arti_dict["stars"] = el["stars"]
+                arti_dict["name"] = user
+                arti_dict["capacity"] = el["capacity"]
+                arti_dict["identifier"] = el["identifier"]
+                for number in el["drops"][arti_name]:
+                    for rarity in el["drops"][arti_name][number]:
+                        arti_dict["count"][number]+=el["drops"][arti_name][number][rarity]["count"]
+
+        t2_mult= \
+            6 if arti_name =="BOOK_OF_BASAN" else 5 if arti_name =="LIGHT_OF_EGGENDIL" else 6 if arti_name =="TACHYON_DEFLECTOR" else\
+            6 if arti_name =="SHIP_IN_A_BOTTLE" else 4 if arti_name =="TITANIUM_ACTUATOR" else 5 if arti_name =="DILITHIUM_MONOCLE" else \
+            5 if arti_name =="QUANTUM_METRONOME" else 6 if arti_name =="PHOENIX_FEATHER" else 4 if arti_name =="THE_CHALICE" else \
+            6 if arti_name =="INTERSTELLAR_COMPASS" else 5 if arti_name =="CARVED_RAINSTICK" else 4 if arti_name =="BEAK_OF_MIDAS" else \
+            6 if arti_name == "MERCURYS_LENS" else 4 if arti_name == "NEODYMIUM_MEDALLION" else 5 if arti_name == "ORNATE_GUSSET" else \
+            6 if arti_name == "TUNGSTEN_ANKH" else 5 if arti_name == "AURELIAN_BROOCH" else 5 if arti_name == "VIAL_MARTIAN_DUST" else \
+            3 if arti_name == "DEMETERS_NECKLACE" else 3 if arti_name == "LUNAR_TOTEM" else 3 if arti_name == "PUZZLE_CUBE" else 0
+        t3_mult=t2_mult*(
+            10 if arti_name == "BOOK_OF_BASAN" else 7 if arti_name == "LIGHT_OF_EGGENDIL" else 10 if arti_name == "TACHYON_DEFLECTOR" else
+            9 if arti_name == "SHIP_IN_A_BOTTLE" else 6 if arti_name == "TITANIUM_ACTUATOR" else 8 if arti_name == "DILITHIUM_MONOCLE" else
+            7 if arti_name == "QUANTUM_METRONOME" else 10 if arti_name == "PHOENIX_FEATHER" else 6 if arti_name == "THE_CHALICE" else
+            8 if arti_name == "INTERSTELLAR_COMPASS" else 7 if arti_name == "CARVED_RAINSTICK" else 5 if arti_name == "BEAK_OF_MIDAS" else
+            8 if arti_name == "MERCURYS_LENS" else 5 if arti_name == "NEODYMIUM_MEDALLION" else 6 if arti_name == "ORNATE_GUSSET" else
+            7 if arti_name == "TUNGSTEN_ANKH" else 7 if arti_name == "AURELIAN_BROOCH" else 7 if arti_name == "VIAL_MARTIAN_DUST" else
+            5 if arti_name == "DEMETERS_NECKLACE" else 6 if arti_name == "LUNAR_TOTEM" else 7 if arti_name == "PUZZLE_CUBE" else 0
+        )
+        t4_mult = t3_mult * (
+            12 if arti_name == "BOOK_OF_BASAN" else 10 if arti_name == "LIGHT_OF_EGGENDIL" else 12 if arti_name == "TACHYON_DEFLECTOR" else
+            12 if arti_name == "SHIP_IN_A_BOTTLE" else 8 if arti_name == "TITANIUM_ACTUATOR" else 10 if arti_name == "DILITHIUM_MONOCLE" else
+            9 if arti_name == "QUANTUM_METRONOME" else 12 if arti_name == "PHOENIX_FEATHER" else 8 if arti_name == "THE_CHALICE" else
+            10 if arti_name == "INTERSTELLAR_COMPASS" else 9 if arti_name == "CARVED_RAINSTICK" else 6 if arti_name == "BEAK_OF_MIDAS" else
+            10 if arti_name == "MERCURYS_LENS" else 6 if arti_name == "NEODYMIUM_MEDALLION" else 8 if arti_name == "ORNATE_GUSSET" else
+            8 if arti_name == "TUNGSTEN_ANKH" else 10 if arti_name == "AURELIAN_BROOCH" else 8 if arti_name == "VIAL_MARTIAN_DUST" else
+            6 if arti_name == "DEMETERS_NECKLACE" else 6 if arti_name == "LUNAR_TOTEM" else 10 if arti_name == "PUZZLE_CUBE" else 0
+        )
+
+        arti_dict["count"]["total"]=arti_dict["count"]["1"]+(arti_dict["count"]["2"]*t2_mult)+(arti_dict["count"]["3"]*t3_mult)+(arti_dict["count"]["4"]*t4_mult)
+        if arti_dict["count"]["total"] > 0:
+            array_arti_new.append(arti_dict)
+
+    return check_and_update_file(old_leaderboard_l_dict,array_arti_new)
 
 def update_leaderboard(old_leaderboard_dict,new_ships):
     old_leaderboard_dict["gold"]=(ingredients(old_leaderboard_dict["gold"],new_ships,"GOLD_METEORITE"))
@@ -233,6 +282,9 @@ def update_leaderboard(old_leaderboard_dict,new_ships):
     for el in stones_array:
         old_leaderboard_dict[el.split("_")[0].lower()] = (stones(old_leaderboard_dict[el.split("_")[0].lower()], new_ships, el))
 
+    ingame, coll_name = utiliy.get_ingame_input_artis()
+    for i in range(len(utiliy.get_ingame_input_artis()[0])):
+        old_leaderboard_dict[coll_name[i]] = (artifacts(old_leaderboard_dict[coll_name[i]], new_ships, ingame[i]))
 
     return old_leaderboard_dict
 

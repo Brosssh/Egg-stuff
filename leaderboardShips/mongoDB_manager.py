@@ -4,6 +4,9 @@ import copy
 from bson import ObjectId
 from pymongo import MongoClient
 
+import utiliy
+
+
 class mongo_manager:
 
     client=None
@@ -144,6 +147,7 @@ class mongo_manager:
             print(e)
 
     def insert_clear_leaderboard(self):
+        self.__get_leaderboard_coll__().delete_many({})
         try:
             for el in ["gold","tau","titanium"]:
                 self.__get_leaderboard_coll__().insert_one(
@@ -153,5 +157,11 @@ class mongo_manager:
                 "soul", "terra", "tachyon", "shell"]:
                 self.__get_leaderboard_coll__().insert_one(
                     {"name": el, "content": {"1": {"name": [],"stars": [],"capacity": [],"identifier": [],"count": [{"1": 0,"2":0,"3": 0,"4": 0,"total": 0}]}}})
+
+            for el in utiliy.get_ingame_input_artis()[1]:
+                self.__get_leaderboard_coll__().insert_one(
+                    {"name": el, "content": {"1": {"name": [], "stars": [], "capacity": [], "identifier": [],
+                                                   "count": [{"1": 0, "2": 0, "3": 0, "4": 0, "total": 0}]}}})
+
         except Exception as e:
             print(e)

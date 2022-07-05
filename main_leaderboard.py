@@ -9,17 +9,7 @@ pssw = lines[1]
 
 conn = "mongodb+srv://" + user + ":" + pssw + "@eggcluster.sbrsi.mongodb.net/?retryWrites=true&w=majority"
 
-stones_array = ["CLARITY_STONE", "LUNAR_STONE", "PROPHECY_STONE", "LIFE_STONE", "QUANTUM_STONE", "DILITHIUM_STONE",
-                "SOUL_STONE", "TERRA_STONE", "TACHYON_STONE", "SHELL_STONE"]
-
-arti_array = ["LIGHT_OF_EGGENDIL", "BOOK_OF_BASAN", "TACHYON_DEFLECTOR", "SHIP_IN_A_BOTTLE", "TITANIUM_ACTUATOR",
-              "DILITHIUM_MONOCLE", "QUANTUM_METRONOME", "PHOENIX_FEATHER", "THE_CHALICE", "INTERSTELLAR_COMPASS",
-              "CARVED_RAINSTICK", "BEAK_OF_MIDAS", "MERCURYS_LENS", "NEODYMIUM_MEDALLION", "ORNATE_GUSSET",
-              "TUNGSTEN_ANKH", "AURELIAN_BROOCH", "VIAL_MARTIAN_DUST", "DEMETERS_NECKLACE", "LUNAR_TOTEM", "PUZZLE_CUBE"]
-
 mongo = mongo_manager(conn)
-
-
 
 while True:
     choice=0
