@@ -111,7 +111,6 @@ class mongo_manager:
         try:
             self.__get_leaderboard_coll__().delete_one({"name":name})
             self.__get_leaderboard_coll__().insert_one({"name":name,"content":leaderboard_updated})
-            print("Leaderboard updated")
         except Exception as e:
             print(e)
 
@@ -147,10 +146,12 @@ class mongo_manager:
     def insert_clear_leaderboard(self):
         try:
             for el in ["gold","tau","titanium"]:
-                self.__get_leaderboard_coll__().insert_one({"name":el,"content":[{"1": 0,"2":0,"3": 0,"total": 0}]})
+                self.__get_leaderboard_coll__().insert_one(
+                    {"name": el, "content": {"1": {"name": [],"stars": [],"capacity": [],"identifier": [],"count": [{"1": 0,"2":0,"3": 0,"total": 0}]}}}
+)
             for el in ["clarity", "lunar", "prophecy", "life", "quantum", "dilithium",
                 "soul", "terra", "tachyon", "shell"]:
                 self.__get_leaderboard_coll__().insert_one(
-                    {"name": el, "content": [{"1": 0, "2": 0, "3": 0,"4": 0, "total": 0}]})
+                    {"name": el, "content": {"1": {"name": [],"stars": [],"capacity": [],"identifier": [],"count": [{"1": 0,"2":0,"3": 0,"4": 0,"total": 0}]}}})
         except Exception as e:
             print(e)

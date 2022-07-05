@@ -1,4 +1,3 @@
-from leaderboardShips.dubug_new_eid import insert_EID_dubug, force_leader_update
 from leaderboardShips.new_EID import insert_EID
 from leaderboardShips.mongoDB_manager import mongo_manager
 from leaderboardShips.show_leaderboard import *

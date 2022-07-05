@@ -13,6 +13,7 @@ def force_leader_update(mongo):
         leaderboard_updated = update_leaderboard(leaderboard_dict, new_ships)
         for el in leaderboard_updated:
             mongo.load_updated_document_by_name(leaderboard_updated[el], el)
+        print("ok")
 
 def insert_EID_dubug(mongo):
 

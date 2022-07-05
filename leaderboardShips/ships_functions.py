@@ -168,8 +168,7 @@ def ingredients(old_leaderboard_l_dict,new_ships,ingr_name):
 
     return check_and_update_file(old_leaderboard_l_dict,array_ing_new)
 
-def stones(old_leaderboard_l_dict,new_ships,stone):
-    stone_name=stone.upper()+"_STONE"
+def stones(old_leaderboard_l_dict,new_ships,stone_name):
     array_stone_new=[]
     user=new_ships["name"]
     for el in new_ships["ships"]:
@@ -232,7 +231,7 @@ def update_leaderboard(old_leaderboard_dict,new_ships):
 
     stones_array=["CLARITY_STONE","LUNAR_STONE","PROPHECY_STONE","LIFE_STONE","QUANTUM_STONE","DILITHIUM_STONE","SOUL_STONE","TERRA_STONE","TACHYON_STONE","SHELL_STONE"]
     for el in stones_array:
-        old_leaderboard_dict[el.lower()] = (stones(old_leaderboard_dict[el.lower()], new_ships, el))
+        old_leaderboard_dict[el.split("_")[0].lower()] = (stones(old_leaderboard_dict[el.split("_")[0].lower()], new_ships, el))
 
 
     return old_leaderboard_dict
