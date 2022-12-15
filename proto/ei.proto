@@ -864,6 +864,14 @@ message MissionResponse {
     optional MissionInfo info = 2;
 }
 
+message AuthenticatedMessage {
+    optional bytes message = 1;
+    optional uint32 version = 3;
+    optional string code = 2;
+    optional bool compressed = 4;
+    optional uint32 original_size = 5;
+}
+
 message CompleteMissionResponse {
     optional bool success = 1;
     optional MissionInfo info = 2;
