@@ -1,7 +1,6 @@
 import proto.ei_pb2 as ei_pb2
 import base64
 import requests
-import time
 
 class server:
 
@@ -12,7 +11,7 @@ class server:
 
     def execute_call(self):
         first_contact_request = ei_pb2.EggIncFirstContactRequest()
-        first_contact_request.ei_user_id = self.EID
+        first_contact_request.gameid = self.EID
         first_contact_request.client_version = 36
 
         url = 'https://www.auxbrain.com/ei/bot_first_contact'
