@@ -30,7 +30,7 @@ class server:
     def get_loot(self,ship_ID):
         loot_request=ei_pb2.MissionRequest()
         loot_request.info.identifier=ship_ID
-        loot_request.ei_user_id=self.EID
+        loot_request.gameid=self.EID
         url = 'https://www.auxbrain.com/ei_afx/complete_mission'
         data = {'data': base64.b64encode(loot_request.SerializeToString()).decode('utf-8')}
 
