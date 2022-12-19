@@ -24,7 +24,7 @@ def insert_EID(mongo):
 
     loot_dict=loots(result,server_manager,mongo,encryptedEID)
 
-    user_name=result.backup.gamename
+    user_name=result.backup.user_name
 
     dict_loots=semplify_dict(loot_dict)
 
