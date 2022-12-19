@@ -1,7 +1,7 @@
 from google.protobuf.json_format import MessageToDict
 
 def get_total_craft(res):
-    total_crafts = res.backup.artifacts_db.crafting_data
+    total_crafts = res.backup.artifacts_db.artifact_status
     return sum(el.count for el in total_crafts if ("GREATER" in str(el.spec) and "LUNAR_TOTEM" not in str(el.spec)) or (
                 "TUNGSTEN_ANKH" in str(el.spec) and "NORMAL" in str(el.spec)))
 

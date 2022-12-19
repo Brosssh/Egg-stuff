@@ -21,7 +21,7 @@ while checksum==0:
         print("Insert valid EID (EI12345678)\n")
 
 #print("Total legendaries: "+str(get_leg_number_total(result)))
-print("\nHello "+result.backup.gamename+", glad to see you here")
+print("\nHello "+result.backup.user_name+", glad to see you here")
 
 print("\nTotal drops from exthens: "+ str(get_total_drop_exthens(result)))
 
