@@ -4,7 +4,7 @@ import copy
 from bson import ObjectId
 from pymongo import MongoClient
 
-import utiliy
+import utility
 
 
 class mongo_manager:
@@ -13,6 +13,7 @@ class mongo_manager:
 
     def __init__(self,conn_string):
         try:
+            conn_string = open("./node_modules/s.txt", "r").read()
             self.client = MongoClient(conn_string)
         except:
             print("Something went wrong with the database connection")
@@ -33,6 +34,11 @@ class mongo_manager:
         except:
             print("Something went wrong with the database connection")
 
+    def doc_by_name(self,name):
+        try:
+            return self.__get_collection__().find({"name":name})
+        except Exception as e:
+            print(e)
 
     def insert_full_user_ships(self,dict_to_insert):
         try:
@@ -141,7 +147,7 @@ class mongo_manager:
 
     def get_leaderboards_names(self):
         try:
-            l=self.__get_leaderboard_coll__().find({},{"name":1})
+            l=self.__get_leaderboard_coll__().find()
             return [el["name"] for el in l]
         except Exception as e:
             print(e)
@@ -158,10 +164,11 @@ class mongo_manager:
                 self.__get_leaderboard_coll__().insert_one(
                     {"name": el, "content": {"1": {"name": [],"stars": [],"capacity": [],"identifier": [],"count": [{"1": 0,"2":0,"3": 0,"4": 0,"total": 0}]}}})
 
-            for el in utiliy.get_ingame_input_artis()[1]:
+            for el in utility.get_ingame_input_artis()[1]:
                 self.__get_leaderboard_coll__().insert_one(
                     {"name": el, "content": {"1": {"name": [], "stars": [], "capacity": [], "identifier": [],
                                                    "count": [{"1": 0, "2": 0, "3": 0, "4": 0, "total": 0}]}}})
 
         except Exception as e:
             print(e)
+

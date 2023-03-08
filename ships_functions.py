@@ -2,7 +2,7 @@ from tqdm.auto import tqdm
 from google.protobuf.json_format import MessageToJson, MessageToDict
 import copy
 
-import utiliy
+import utility
 
 
 def __get_array_ships_ID__(res): #get all exthens IDs
@@ -29,7 +29,8 @@ def loots(res,server_manager, mongo, encryptedEID):
     already_stored_IDS=mongo.get_ID_ships_already_stored(encryptedEID)
     new_ships=[el for el in __get_array_ships_ID__(res) if el not in already_stored_IDS]
     print("Please wait, DO NOT CLOSE THIS PAGE, maybe you can actually but please wait till the end and don't press STOP :)\n")
-    print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n\n")
+    print("If you are wondering why it's this slow it's because i don't want to spend some money on a server so replit is doing the job\n")
+    print("Retriving ships loot from Auxbrain:\n\n")
     for el in tqdm(new_ships):
         try:
             ship_raw = server_manager.get_loot(el)
@@ -282,8 +283,8 @@ def update_leaderboard(old_leaderboard_dict,new_ships):
     for el in stones_array:
         old_leaderboard_dict[el.split("_")[0].lower()] = (stones(old_leaderboard_dict[el.split("_")[0].lower()], new_ships, el))
 
-    ingame, coll_name = utiliy.get_ingame_input_artis()
-    for i in range(len(utiliy.get_ingame_input_artis()[0])):
+    ingame, coll_name = utility.get_ingame_input_artis()
+    for i in range(len(utility.get_ingame_input_artis()[0])):
         old_leaderboard_dict[coll_name[i]] = (artifacts(old_leaderboard_dict[coll_name[i]], new_ships, ingame[i]))
 
     return old_leaderboard_dict
